@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: userservice
+    name: gateway-service
   profiles:
     active: default
   config:
