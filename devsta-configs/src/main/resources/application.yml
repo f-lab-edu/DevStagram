@@ -1,12 +1,14 @@
 server:
-  port: 8088
+  port: 8888
 spring:
   name: config-server
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/madplay/spring-cloud-config-repository
+          uri: https://github.com/smellHyang/devstagram-configs.git
+          search-paths: user, posts, meetup, gateway
+
 
 #actuator
 management:
