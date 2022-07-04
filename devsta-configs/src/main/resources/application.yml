@@ -10,7 +10,7 @@ spring:
         git:
           uri: https://github.com/smellHyang/devstagram-configs.git
 
-#actuator
+#actuator 설정
 management:
   endpoints:
     web:
