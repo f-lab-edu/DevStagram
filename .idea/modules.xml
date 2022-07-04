@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/devsta-configs/devsta-configs.iml" filepath="$PROJECT_DIR$/devsta-configs/devsta-configs.iml" />
       <module fileurl="file://$PROJECT_DIR$/devsta-gateway/devsta-gateway.iml" filepath="$PROJECT_DIR$/devsta-gateway/devsta-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devsta-meetup/devsta-meetup.iml" filepath="$PROJECT_DIR$/devsta-meetup/devsta-meetup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devsta-posts/devsta-posts.iml" filepath="$PROJECT_DIR$/devsta-posts/devsta-posts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devsta-users/devsta-users.iml" filepath="$PROJECT_DIR$/devsta-users/devsta-users.iml" />
     </modules>
   </component>
 </project>

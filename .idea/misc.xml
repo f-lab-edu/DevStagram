@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/devsta-configs/pom.xml" />
         <option value="$PROJECT_DIR$/devsta-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/devsta-users/pom.xml" />
+        <option value="$PROJECT_DIR$/devsta-meetup/pom.xml" />
       </list>
     </option>
   </component>

@@ -2,23 +2,33 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="devsta-gateway" />
         <module name="devsta-configs" />
+        <module name="devsta-users" />
+        <module name="devsta-meetup" />
+        <module name="devsta-gateway" />
+        <module name="devsta-posts" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="devsta-configs" target="11" />
       <module name="devsta-gateway" target="11" />
+      <module name="devsta-meetup" target="11" />
+      <module name="devsta-posts" target="11" />
+      <module name="devsta-users" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="devsta-configs" options="-parameters" />
       <module name="devsta-gateway" options="-parameters" />
+      <module name="devsta-meetup" options="-parameters" />
+      <module name="devsta-posts" options="-parameters" />
+      <module name="devsta-users" options="-parameters" />
     </option>
   </component>
 </project>
