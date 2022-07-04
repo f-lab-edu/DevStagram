@@ -1,0 +1,16 @@
+server:
+  port: 8088
+spring:
+  name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/madplay/spring-cloud-config-repository
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

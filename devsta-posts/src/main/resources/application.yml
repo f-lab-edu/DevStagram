@@ -1,9 +1,11 @@
 server:
-  port: 9090
+  port: 9091
+
 spring:
   application:
-    name: userservice
+    name: postservice
   profiles:
     active: default
   config:
     import: "configserver:http://localhost:8888"
+  
