@@ -9,3 +9,5 @@ spring:
     import: "optional:configserver:http://localhost:8888"
     #use-legacy-processing: true #unable to laod config data 오류 발생 시 사용
 
+
+
