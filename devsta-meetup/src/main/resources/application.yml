@@ -1,8 +1,9 @@
 server:
-  port: 9090
+  port: 9092
+
 spring:
   application:
-    name: userservice
+    name: meetupservice
   profiles:
     active: default
   config:
