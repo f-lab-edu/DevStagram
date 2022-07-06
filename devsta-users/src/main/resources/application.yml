@@ -1,9 +1,17 @@
 server:
   port: 9090
 spring:
+  profiles:
+    include: db
   application:
     name: userservice
-  profiles:
-    active: default
-  config:
-    import: "optional:configserver:http://localhost:8888"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devstagram
+      authentication-database: admin
+
+
+      #  profiles:
+      #    active: default
+      #  config:
+      #    import: "optional:configserver:http://localhost:8888"
