@@ -1,10 +1,8 @@
 package com.moondysmell.devstausers.domain.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -17,6 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class DevUser {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "devuser_sequence";
+
     @Id
     @Field("_id")
     private String id;
@@ -33,13 +35,14 @@ public class DevUser {
     private String blog;
     private List<String> tags;
 
+    //Oauth를 위해 구성한 추가 필드
+    private String provider;
+    private String providerId;
+
     public DevUser update(String name, String picture) {
         this.name = name;
         this.pictureUrl = picture;
         return this;
     }
 
-
 }
-
-

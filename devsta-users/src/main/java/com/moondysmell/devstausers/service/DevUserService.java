@@ -1,8 +1,10 @@
 package com.moondysmell.devstausers.service;
 
 import com.moondysmell.devstausers.domain.document.DevUser;
+import com.moondysmell.devstausers.domain.dto.UserJoinDto;
 import com.moondysmell.devstausers.repository.DevUserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class DevUserService {
     private final DevUserRepository devUserRepository;
     private final MongoTemplate mongoTemplate;
+
+    final static private String COLLECTION_NAME="DevUser";
 
     public DevUser findUserByEmail(String email) {
         Query query = new Query(Criteria.where("email").is(email));
@@ -40,4 +44,13 @@ public class DevUserService {
     public List<DevUser> findAll() {
         return devUserRepository.findAll();
     }
+
+
+    public void join(UserJoinDto userJoinDto){
+        //Document 생성(insert)
+        //mongoDB에 DevUser라는 컬렌션에 사용자가 입력한 값 입력
+        //devUserRepository.insert(userJoinDto);
+        mongoTemplate.insert(userJoinDto, COLLECTION_NAME);
+    }
+
 }
