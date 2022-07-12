@@ -4,8 +4,15 @@ server:
 spring:
   application:
     name: postservice
-  profiles:
-    active: default
-  config:
-    import: "configserver:http://localhost:8888"
+#  profiles:
+#    active: default
+#  config:
+#    import: "configserver:http://localhost:8888"
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/devstagram
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
   
