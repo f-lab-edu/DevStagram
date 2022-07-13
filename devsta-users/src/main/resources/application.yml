@@ -2,13 +2,13 @@ server:
   port: 9090
 spring:
   profiles:
-    include: oauth #,db
+    include: oauth, db
   application:
     name: userservice
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/devstagram #mongodb://localhost:17017/devstagram
-      #authentication-database: admin
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:17017/devstagram #mongodb://localhost:17017/devstagram
+#      #authentication-database: admin
 
 
 

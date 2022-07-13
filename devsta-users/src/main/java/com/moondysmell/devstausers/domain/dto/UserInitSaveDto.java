@@ -14,7 +14,6 @@ import java.util.Date;
 @Getter
 public class UserInitSaveDto implements Serializable {
     private String name;
-
     private String pictureUrl;
     private String email;
 
