@@ -1,5 +1,7 @@
 package com.moondysmell.devstausers.domain.document;
 
+import com.moondysmell.devstausers.domain.dto.UserDetailDto;
+import com.moondysmell.devstausers.domain.dto.UserJoinDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -13,6 +15,7 @@ import java.util.List;
 @Data
 //@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 public class DevUser {
 
@@ -37,11 +40,24 @@ public class DevUser {
 
     //Oauth를 위해 구성한 추가 필드
     private String provider;
-    private String providerId;
 
-    public DevUser update(String name, String picture) {
-        this.name = name;
+    public DevUser update(String nickname, String picture) {
+        this.nickname = nickname;
         this.pictureUrl = picture;
+        return this;
+    }
+
+    public DevUser ofDetail(UserDetailDto userDetailDto) {
+        this.nickname = userDetailDto.getNickname();
+        this.password = userDetailDto.getPassword();
+        this.pictureUrl = userDetailDto.getPictureUrl();
+        this.createdDt = new Date();
+        this.description = userDetailDto.getDescription();
+        this.email = userDetailDto.getEmail();
+        this.github = userDetailDto.getGithub();
+        this.blog = userDetailDto.getBlog();
+        this.tags = userDetailDto.getTags();
+        this.provider = "app";
         return this;
     }
 

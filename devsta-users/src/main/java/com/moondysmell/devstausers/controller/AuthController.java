@@ -7,8 +7,11 @@ import com.moondysmell.devstausers.common.CustomException;
 import com.moondysmell.devstausers.domain.document.DevUser;
 import com.moondysmell.devstausers.domain.dto.ChangePwDto;
 import com.moondysmell.devstausers.domain.dto.LoginDto;
+import com.moondysmell.devstausers.domain.dto.UserDetailDto;
+import com.moondysmell.devstausers.domain.dto.UserSummaryDto;
 import com.moondysmell.devstausers.service.DevUserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 @AllArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/auth")
 public class AuthController {
     private final DevUserService devUserService;
@@ -31,8 +35,10 @@ public class AuthController {
 
     @GetMapping("/signIn")
     public CommonResponse signIn(@RequestBody LoginDto requestBody) {
-        devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
-        return new CommonResponse(CommonCode.SUCCESS);
+        DevUser user = devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
+        HashMap<String, DevUser> attribute = new HashMap<>();
+        attribute.put("devUser", user);
+        return new CommonResponse<DevUser>(CommonCode.SUCCESS, attribute);
     }
 
     @PostMapping("/changePW")
@@ -44,6 +50,25 @@ public class AuthController {
         }
         return new CommonResponse(CommonCode.SUCCESS);
     }
+
+    @PostMapping("/signUp")
+    public CommonResponse signUp(@RequestBody UserDetailDto userDetailDto) {
+        if (devUserService.findAllUserByEmail(userDetailDto.getEmail()).size() > 0) throw new CustomException(CommonCode.USER_ALREADY_EXIST);
+        if (devUserService.findAllUserByNickname(userDetailDto.getNickname()).size() >0) throw new CustomException(CommonCode.NICKNAME_ALREADY_EXIT);
+        try {
+            DevUser savedUser = devUserService.saveDetail(userDetailDto);
+            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS);
+            return new CommonResponse(CommonCode.FAIL);
+
+        }catch (Exception e) {
+            log.error(">>> " + e.getMessage());
+            throw new CustomException(CommonCode.FAIL);
+        }
+
+
+    }
+
+
 
 
 
