@@ -3,6 +3,7 @@ package com.moondysmell.devstausers.domain.document;
 import com.moondysmell.devstausers.domain.dto.UserDetailDto;
 import com.moondysmell.devstausers.domain.dto.UserJoinDto;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,7 +25,7 @@ public class DevUser {
 
     @Id
     @Field("_id")
-    private String id;
+    private ObjectId id;
     private String name;
     private String nickname;
     private String password;

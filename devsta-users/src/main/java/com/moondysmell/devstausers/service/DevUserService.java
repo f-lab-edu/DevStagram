@@ -13,8 +13,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -23,7 +26,7 @@ public class DevUserService {
     private final DevUserRepository devUserRepository;
     private final MongoTemplate mongoTemplate;
 
-    final static private String COLLECTION_NAME="DevUser";
+    final static private String COLLECTION_NAME = "DevUser";
 
     public DevUser findUserByEmail(String email) {
         Query query = new Query(Criteria.where("email").is(email));
@@ -51,12 +54,7 @@ public class DevUserService {
     }
 
     public DevUser findUserById(String id) {
-        Optional<DevUser> targetUser = devUserRepository.findById(id);
-        if (targetUser.isEmpty()) {
-            throw new RuntimeException("해당 ID의 사용자가 없습니다");
-        }
-        return targetUser.get();
-
+        return devUserRepository.findById(id).orElseThrow();
     }
 
     public List<DevUser> findAll() {
@@ -68,22 +66,25 @@ public class DevUserService {
         Query query = new Query();
         Update update = new Update();
         query.addCriteria(Criteria.where("email").is(user.getEmail()));
-
         update.set("password", user.getNewPassword());
         return mongoTemplate.updateFirst(query, update, DevUser.class);
     }
 
-    public DevUser saveDetail (UserDetailDto userDetailDto) {
+    public DevUser saveDetail(UserDetailDto userDetailDto) {
         DevUser newUser = new DevUser();
         newUser.ofDetail(userDetailDto);
         return mongoTemplate.insert(newUser, COLLECTION_NAME);
     }
 
-//    public void join(UserJoinDto userJoinDto){
-//        //Document 생성(insert)
-//        //mongoDB에 DevUser라는 컬렌션에 사용자가 입력한 값 입력
-//        //devUserRepository.insert(userJoinDto);
-//        mongoTemplate.(userJoinDto, COLLECTION_NAME);
-//    }
+    public DevUser updateProfile(String userId, UserDetailDto userDetailDto) throws NoSuchElementException {
+        DevUser target = devUserRepository.findById(userId).orElseThrow();
+        String fixedEmail = target.getEmail();
+        DevUser updateUser = target.ofDetail(userDetailDto);
+        if (!updateUser.getEmail().equals(fixedEmail)) {
+            updateUser.setEmail(fixedEmail);
+        }
+        return devUserRepository.save(updateUser);
+    }
+
 
 }
