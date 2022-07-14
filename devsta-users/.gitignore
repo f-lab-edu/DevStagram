@@ -1,4 +1,5 @@
 application-db.properties
+application-oauth.properties
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
