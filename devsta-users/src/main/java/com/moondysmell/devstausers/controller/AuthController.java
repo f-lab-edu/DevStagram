@@ -23,15 +23,7 @@ import java.util.List;
 @RequestMapping("/auth")
 public class AuthController {
     private final DevUserService devUserService;
-    @GetMapping("/getAll")
-    public List<DevUser> getAllUsers() {
-        return devUserService.findAll();
-    }
-
-    @GetMapping("/getByEmail")
-    public DevUser getByEmail(@RequestParam String email) {
-        return devUserService.findUserByEmail(email);
-    }
+    private final String DEFAULT_PICTURE_URL = "https://toppng.com//public/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png";
 
     @GetMapping("/signIn")
     public CommonResponse signIn(@RequestBody LoginDto requestBody) {
@@ -55,9 +47,15 @@ public class AuthController {
     public CommonResponse signUp(@RequestBody UserDetailDto userDetailDto) {
         if (devUserService.findAllUserByEmail(userDetailDto.getEmail()).size() > 0) throw new CustomException(CommonCode.USER_ALREADY_EXIST);
         if (devUserService.findAllUserByNickname(userDetailDto.getNickname()).size() >0) throw new CustomException(CommonCode.NICKNAME_ALREADY_EXIT);
+        if (userDetailDto.getPictureUrl() == null) {
+            userDetailDto.setPictureUrl(DEFAULT_PICTURE_URL);
+        }
         try {
             DevUser savedUser = devUserService.saveDetail(userDetailDto);
-            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS);
+            HashMap attribute = new HashMap();
+            attribute.put("userId", savedUser.getId().toString());
+            attribute.put("email", savedUser.getEmail());
+            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, attribute);
             return new CommonResponse(CommonCode.FAIL);
 
         }catch (Exception e) {
