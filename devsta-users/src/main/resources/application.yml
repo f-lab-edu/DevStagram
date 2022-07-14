@@ -2,7 +2,7 @@ server:
   port: 9090
 spring:
   profiles:
-    include: oauth, db
+    include: db
   application:
     name: userservice
 #  data:
