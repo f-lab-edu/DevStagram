@@ -1,27 +1,34 @@
 package com.moondysmell.devstaposts.domain.dto;
 
 import com.moondysmell.devstaposts.domain.document.Posts;
-import com.moondysmell.devstaposts.domain.document.User;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
-
-@Getter
-@NoArgsConstructor
+@Data
+@Builder
 public class PostsSaveRequestDto {
 
+    private String userId;
     private String contents;
+    private String pictureUrl;
 
-    @Builder
-    public PostsSaveRequestDto(String contents){
-        this.contents = contents;
-    }
 
-    public Posts convertPosts(User user){
+//
+////    public Posts convertPosts(User user){
+////        return Posts.builder()
+////                .user(user)
+////                .contents(this.contents)
+////                .build();
+////    }
+
+    public Posts toEntity(){
         return Posts.builder()
-                .user(user)
-                .contents(this.contents)
+                .userId(userId)
+                .contents(contents)
+                .pictureUrl(pictureUrl)
                 .build();
     }
 

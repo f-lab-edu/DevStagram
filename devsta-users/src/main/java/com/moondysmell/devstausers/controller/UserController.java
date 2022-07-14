@@ -7,7 +7,10 @@ import com.moondysmell.devstausers.repository.DevUserRepository;
 import com.moondysmell.devstausers.service.DevUserService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,8 +24,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     private final DevUserService devUserService;
@@ -87,5 +91,30 @@ public class UserController {
         userJoinDto.setEmail(email);
         devUserService.join(userJoinDto);
         return "redirect:/user/login";
+    }
+
+    @PostMapping(value = "/users/summary/in", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserSummaries(@RequestBody List<String> usernames) {
+        log.info("retrieving summaries for {} usernames", usernames.size());
+
+        List<UserSummary> summaries =
+                devUserService
+                        .findByUsernameIn(usernames)
+                        .stream()
+                        .map(user -> convertTo(user))
+                        .collect(Collectors.toList());
+
+        return ResponseEntity.ok(summaries);
+
+    }
+
+    private UserSummary convertTo(User user) {
+        return UserSummary
+                .builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getUserProfile().getDisplayName())
+                .profilePicture(user.getUserProfile().getProfilePictureUrl())
+                .build();
     }
 }

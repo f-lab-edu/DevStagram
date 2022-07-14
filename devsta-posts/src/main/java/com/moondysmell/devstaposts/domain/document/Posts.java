@@ -6,16 +6,19 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 
 @Document(collection = "Posts")
 @Data
-@NoArgsConstructor
-public class Posts  {
+@Builder
+@AllArgsConstructor
+public class Posts implements Persistable<String>{
 
     @Transient
     public static final  String SEQUENCE_NAME = "posts_sequence";
@@ -27,8 +30,7 @@ public class Posts  {
     //DevUser의 Nickname을 가져오기위함
     @Field("user_id")
     @CreatedBy
-    private User user;
-
+    private String userId;
     @Setter
     private String contents;
 
@@ -38,24 +40,22 @@ public class Posts  {
     @Field("picture_url")
     private String pictureUrl;
 
-    @Field("crate_dt")
+    @Field("create_dt")
     @CreatedDate
-    private LocalDateTime createDt;
+    private Date createDt;
+
 
     @Field("update_dt")
     @LastModifiedDate
-    private LocalDateTime updateDt;
+    private Date updateDt;
 
-    @Builder
-    public Posts(User user, String contents){
-        this.user = user;
-        this.contents = contents;
+    @Override
+    public String getId() {
+        return id+"";
     }
 
-    public Posts update(Posts newPosts){
-        this.contents = newPosts.contents;
-        return this;
+    @Override
+    public boolean isNew() {
+        return createDt == null;
     }
-
-
 }

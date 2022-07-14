@@ -2,43 +2,38 @@ package com.moondysmell.devstaposts.service;
 
 
 import com.moondysmell.devstaposts.domain.document.Posts;
-import com.moondysmell.devstaposts.domain.document.User;
 import com.moondysmell.devstaposts.domain.dto.PostsSaveRequestDto;
-import com.moondysmell.devstaposts.exception.ExceptionType;
-import com.moondysmell.devstaposts.exception.PostsException;
+import com.moondysmell.devstaposts.exception.CommonCode;
+import com.moondysmell.devstaposts.exception.CustomException;
 import com.moondysmell.devstaposts.repository.PostsRepository;
-import com.moondysmell.devstaposts.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PostsService {
 
     private final PostsRepository postsRepository;
-    private UserRepository userRepository;
+    private final MongoTemplate mongoTemplate;
+    final static private String COLLECTION_NAME="Posts";
+
 
 //    @Autowired
 //    private MongoTemplate mongoTemplate;
 //    private MongoOperations mongoOperations;
 
-    public PostsService(PostsRepository postsRepository, UserRepository userRepository) {
-        this.postsRepository = postsRepository;
-        this.userRepository = userRepository;
-    }
+//    public PostsService(PostsRepository postsRepository) {
+//        this.postsRepository = postsRepository;
+//    }
 
-    public Posts post(PostsSaveRequestDto postsSaveRequestDto, User user){
-        user = Optional.of(userRepository.findByUserId(user.getUserId())).orElseThrow(() -> new PostsException(ExceptionType.NOT_FOUND_USER));
-        return postsRepository.save(postsSaveRequestDto.convertPosts(user));
+    //게시글 저장
+    public Posts save(PostsSaveRequestDto postsSaveRequestDto){
+        String contents = postsSaveRequestDto.getContents();
+        if(contents.isEmpty()) throw new CustomException(CommonCode.CONTENT_IS_MANDATORY);
+        return mongoTemplate.insert(postsSaveRequestDto.toEntity(),COLLECTION_NAME);
     }
 
 
