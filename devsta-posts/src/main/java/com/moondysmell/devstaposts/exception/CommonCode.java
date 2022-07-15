@@ -17,7 +17,10 @@ public enum CommonCode {
     //-2000: MeetUp
 
     //-3000: Posts
-    CONTENT_IS_MANDATORY(400,-3000, "내용이 존재하지 않습니다.");
+    CONTENT_IS_MANDATORY(400,-3000, "내용이 존재하지 않습니다."),
+    NO_QUALIFICATION_USER(400,-3001, "권한이 없습니다."),
+    NOT_MATCH_WRITER(2002, 200, "작성자만 수행가능한 작업입니다."),
+    NOT_FOUNT_CONTENTS(2003, 200, "존재하지 않는 게시글입니다.");
 
     //-4000: Gateway
 

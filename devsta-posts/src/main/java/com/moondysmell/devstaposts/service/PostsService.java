@@ -8,8 +8,13 @@ import com.moondysmell.devstaposts.exception.CustomException;
 import com.moondysmell.devstaposts.repository.PostsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -36,16 +41,25 @@ public class PostsService {
         return mongoTemplate.insert(postsSaveRequestDto.toEntity(),COLLECTION_NAME);
     }
 
+    //타임라인 - 팔로워 조회
+//    public List<Posts> viewAll(List<String> ids){
+//        return postsRepository.findByIdInOrderByCreatedAtDesc(ids);
+//    }
 
-//    public Posts createPost(PostsSaveRequestDto postsSaveRequestDto){
-//
-//            Posts posts = new Posts(postsSaveRequestDto.getContents());
-//            postsRepository.save(posts);
-//
-//            Query query = new Query(Criteria.where("user_id").is(posts.getDevUser()))
-////            return posts;
-//
-//        }
+    //타임라인 - 전체조회(최신순)
+    public List<Posts> viewAll(){
+        return postsRepository.findAll(Sort.by(Sort.Direction.DESC, "createDt"));
+    }
+
+    //내가 작성한 피트들만 조회
+//    public List<Posts> findAllById(String userId){
+//        Query query = new Query(Criteria.where("userId").is(userId));
+//        List<Posts> posts = mongoTemplate.find(query,Posts.class);
+//        return posts;
+//    }
+
+
+
 
 
 }

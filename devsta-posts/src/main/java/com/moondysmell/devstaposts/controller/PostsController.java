@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -39,6 +40,33 @@ public class PostsController {
         }
 
     }
+
+    @GetMapping("/timeline")
+    public CommonResponse<List<Posts>> viewAll(){
+
+        try{
+            List<Posts> posts = postsService.viewAll();
+            return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
+        }catch (Exception e){
+            log.error(">>>" + e.getMessage());
+            throw new CustomException(CommonCode.FAIL);
+        }
+
+    }
+
+//    @PostMapping("/follower/timeline")
+//    public CommonResponse<?> findPostsByIdIn(@RequestBody List<String> ids) {
+//
+//        try{
+//            List<Posts> posts = postsService.viewAll(ids);
+//            log.info("found {} posts", posts.size());
+//
+//            return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
+//        }catch (Exception e){
+//            log.error(">>>" + e.getMessage());
+//            throw new CustomException(CommonCode.FAIL);
+//        }
+////   }
 
 
 }
