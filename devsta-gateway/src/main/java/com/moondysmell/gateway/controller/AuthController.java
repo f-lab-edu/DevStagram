@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/signIn")
     public CommonResponse signIn(@RequestBody HashMap<String, String> requestBody) {
-        HashMap responseEntity = new HashMap<String, Object>();
+        HashMap responseEntity;
         String response = restClient.restTemplatePost(userUri, "/auth/signIn", requestBody);
         try {
             responseEntity = gson.fromJson(response, HashMap.class);
@@ -54,11 +54,33 @@ public class AuthController {
                     return new CommonResponse(CommonCode.of((code)));
             }
 
+        } catch (Exception e) {
+            log.info(">>>  " + e);
+            return new CommonResponse(CommonCode.FAIL, Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/signUp")
+    public CommonResponse signUp(@RequestBody HashMap<String, Object> requestBody) {
+        HashMap responseEntity;
+        String response = restClient.restTemplatePost(userUri, "/auth/signUp", requestBody);
+        try {
+            responseEntity = gson.fromJson(response, HashMap.class);
+            Double codeDouble = (Double) responseEntity.get("code");
+            int code = codeDouble.intValue();
+            switch (code) {
+                case 200:
+                    LinkedTreeMap attribute = (LinkedTreeMap) responseEntity.get("attribute");
+//                    String id = (String) attribute.get("userId");
+//                    String email = (String) attribute.get("email");
+                    return new CommonResponse(CommonCode.SUCCESS, attribute);
+                default:
+                    return new CommonResponse(CommonCode.of((code)));
+            }
 
         } catch (Exception e) {
             log.info(">>>  " + e);
             return new CommonResponse(CommonCode.FAIL, Map.of("message", e.getMessage()));
         }
-
     }
 }
