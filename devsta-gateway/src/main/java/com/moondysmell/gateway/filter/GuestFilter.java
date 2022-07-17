@@ -22,10 +22,10 @@ public class GuestFilter extends AbstractGatewayFilterFactory<GuestFilter.Config
     public GuestFilter() {
         super(Config.class);
     }
-//    private static final String USER_ID = "userId";
-//    private static final String EMAIL = "email";
-//    private static final String GUEST_ID = "62d3f4a5a293c66fd2d9e9dc";
-//    private static final String GUEST_EMAIL = "guest@devstagram.com";
+    private static final String USER_ID = "userId";
+    private static final String EMAIL = "email";
+    private static final String GUEST_ID = "62d3f4a5a293c66fd2d9e9dc";
+    private static final String GUEST_EMAIL = "guest@devstagram.com";
 
 
     @Override
@@ -41,8 +41,8 @@ public class GuestFilter extends AbstractGatewayFilterFactory<GuestFilter.Config
 
     private void addAuthorizationHeaders(ServerHttpRequest request) {
         request.mutate()
-            .header("userId", "62d3f4a5a293c66fd2d9e9dc")
-            .header("eamil", "guest@devstagram.com")
+            .header(USER_ID, GUEST_ID)
+            .header(EMAIL, GUEST_EMAIL)
             .build();
     }
 
