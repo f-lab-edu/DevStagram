@@ -27,10 +27,12 @@ spring:
             - Path=/api/user/profile/**
           filters:
             - RewritePath=/api/user/(?<path>.*),/$\{path}
-#            - UserFilter
+            - UserJwtFilter
 jwt:
   secret: moondysmellwebapplicationsecret
-  expiration-second: 259200  #72시간
+  expiration-second: 172800  #48시간
+#  expiration-second: 259200  #72시간
+#  expiration-second: 10  #10초
 
 
 
