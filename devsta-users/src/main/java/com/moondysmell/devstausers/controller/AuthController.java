@@ -57,14 +57,6 @@ public class AuthController {
         }
         try {
             DevUser savedUser = devUserService.saveDetail(userDetailDto);
-            HashMap attribute = new HashMap();
-            attribute.put("userId", savedUser.getId().toString());
-            attribute.put("email", savedUser.getEmail());
-            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, attribute);
-//            HashMap attribute = new HashMap();
-//            attribute.put("userId", savedUser.getId().toString());
-//            attribute.put("email", savedUser.getEmail());
-//            attribute.put("nickname", savedUser.getNickname());
             if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
             return new CommonResponse(CommonCode.FAIL);
 
@@ -72,6 +64,7 @@ public class AuthController {
             log.error(">>> " + e.getMessage());
             throw new CustomException(CommonCode.FAIL);
         }
+
 
     }
 
