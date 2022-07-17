@@ -1,5 +1,7 @@
-package com.moondysmell.gateway.auth;
+package com.moondysmell.gateway.filter;
 
+import com.moondysmell.gateway.auth.JwtUtils;
+import com.moondysmell.gateway.auth.TokenUser;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
