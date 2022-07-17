@@ -12,11 +12,9 @@ import com.moondysmell.devstausers.domain.dto.UserSummaryDto;
 import com.moondysmell.devstausers.service.DevUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -56,7 +54,7 @@ public class AuthController {
             userDetailDto.setPictureUrl(DEFAULT_PICTURE_URL);
         }
         try {
-            DevUser savedUser = devUserService.saveDetail(userDetailDto);
+            DevUser savedUser = devUserService.saveUser(userDetailDto);
             if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
             return new CommonResponse(CommonCode.FAIL);
 
