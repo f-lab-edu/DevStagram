@@ -57,6 +57,10 @@ public class AuthController {
         }
         try {
             DevUser savedUser = devUserService.saveDetail(userDetailDto);
+            HashMap attribute = new HashMap();
+            attribute.put("userId", savedUser.getId().toString());
+            attribute.put("email", savedUser.getEmail());
+            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, attribute);
 //            HashMap attribute = new HashMap();
 //            attribute.put("userId", savedUser.getId().toString());
 //            attribute.put("email", savedUser.getEmail());
@@ -69,7 +73,6 @@ public class AuthController {
             throw new CustomException(CommonCode.FAIL);
         }
 
-
     }
 
 
@@ -77,3 +80,4 @@ public class AuthController {
 
 
 }
+
