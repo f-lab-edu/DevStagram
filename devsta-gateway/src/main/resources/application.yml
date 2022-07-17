@@ -1,3 +1,5 @@
+uri:
+  user-service: "http://localhost:9090"
 server:
   port: 9999
 spring:
@@ -6,8 +8,29 @@ spring:
   profiles:
     active: default
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: "optional:configserver:"
     #use-legacy-processing: true #unable to laod config data 오류 발생 시 사용
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+      routes:
+        - id: user-service
+          uri: ${uri.user-service}
+          predicates:
+            - Path=/api/user/profile/**
+          filters:
+            - RewritePath=/api/user/(?<path>.*),/$\{path}
+#            - UserFilter
+jwt:
+  secret: moondysmellwebapplicationsecret
+  expiration-second: 259200  #72시간
 
 
 

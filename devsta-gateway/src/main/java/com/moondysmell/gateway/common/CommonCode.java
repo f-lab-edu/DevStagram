@@ -3,6 +3,9 @@ package com.moondysmell.gateway.common;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Arrays;
 
 @Getter
 @JsonFormat(shape = Shape.OBJECT)
@@ -24,15 +27,21 @@ public enum CommonCode {
 
     //-4000: Gateway
 
-
-
     private int status;
     private int code;
     private String message;
+
 
     CommonCode(int status, int code, String message) {
         this.status = status;
         this.message = message;
         this.code = code;
+    }
+
+    public static CommonCode of(int code) {
+        return Arrays.stream(values())
+                .filter(commonCode -> commonCode.code == code)
+                .findAny()
+                .orElse(FAIL);
     }
 }
