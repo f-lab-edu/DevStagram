@@ -1,5 +1,6 @@
 package com.moondysmell.devstausers.domain.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moondysmell.devstausers.domain.dto.UserDetailDto;
 import com.moondysmell.devstausers.domain.dto.UserJoinDto;
 import lombok.*;
@@ -13,11 +14,12 @@ import java.util.Date;
 import java.util.List;
 
 @Document(collection = "DevUser")
-@Data
-//@RequiredArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
+@ToString(exclude = "password")
 public class DevUser {
 
     @Transient
@@ -28,6 +30,7 @@ public class DevUser {
     private ObjectId id;
     private String name;
     private String nickname;
+    @JsonIgnore
     private String password;
     @Field("picture_url")
     private String pictureUrl;

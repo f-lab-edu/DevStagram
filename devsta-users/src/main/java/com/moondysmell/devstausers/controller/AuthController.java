@@ -25,12 +25,13 @@ public class AuthController {
     private final DevUserService devUserService;
     private final String DEFAULT_PICTURE_URL = "https://toppng.com//public/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png";
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public CommonResponse signIn(@RequestBody LoginDto requestBody) {
         DevUser user = devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
-        HashMap<String, DevUser> attribute = new HashMap<>();
-        attribute.put("devUser", user);
-        return new CommonResponse<DevUser>(CommonCode.SUCCESS, attribute);
+        HashMap<String, String> attribute = new HashMap<>();
+        attribute.put("id", user.getId().toString());
+        attribute.put("email", user.getEmail());
+        return new CommonResponse<String>(CommonCode.SUCCESS, attribute);
     }
 
     @PostMapping("/changePW")
