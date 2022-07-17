@@ -29,6 +29,13 @@ spring:
           filters:
             - RewritePath=/api/user/(?<path>.*),/$\{path}
             - UserJwtFilter
+        - id: guest-user-service
+          uri: ${uri.user-service}
+          predicates:
+            - Path=/api/guest/profile/**
+          filters:
+            - RewritePath=/api/guest/(?<path>.*),/$\{path}
+            - GuestFilter
         - id: post-service
           uri: ${uri.post-service}
           predicates:
@@ -36,6 +43,13 @@ spring:
           filters:
             - RewritePath=/api/user/(?<path>.*),/$\{path}
             - UserJwtFilter
+        - id: guest-post-service
+          uri: ${uri.post-service}
+          predicates:
+            - Path=/api/guest/posts/**
+          filters:
+            - RewritePath=/api/guest/(?<path>.*),/$\{path}
+            - GuestFilter
 jwt:
   secret: moondysmellwebapplicationsecret
   expiration-second: 172800  #48시간
