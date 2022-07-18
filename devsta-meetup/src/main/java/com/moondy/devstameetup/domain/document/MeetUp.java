@@ -1,30 +1,24 @@
 package com.moondy.devstameetup.domain.document;
 
 import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
 @Document(collection = "MeetUp")
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MeetUp implements Persistable<Long> {
-    @Transient
-    public static final  String SEQUENCE_NAME = "meetup_sequence";
+public class MeetUp {
 
     @Id
     @Field("_id")
-    private Long seq;
+    private ObjectId id;
 
     @Field("category")
     private String category;
@@ -41,27 +35,27 @@ public class MeetUp implements Persistable<Long> {
     @Field("member_id")
     private List<String> memberId;
 
-    @Field("how_join")
-    private String howJoin;
+    @Field("is_open_yn")
+    private Boolean isOpenYn;
 
-    @Field("status")
-    private String status;
+    @Field("is_recruiting")
+    private Boolean isRecruiting;
 
     @Field("leader_id")
     private String leaderId;
 
-    @Override
-    public Long getId() {
-        return this.seq;
+    public static MeetUp of(String userId, CreateMeetUpDto dto) {
+        MeetUp meetup = MeetUp.builder()
+                .category(dto.getCategory())
+                .title(dto.getTitle())
+                .contents(dto.getContents())
+                .maxPeople(dto.getMaxPeople())
+                .memberId(List.of())
+                .isOpenYn(dto.getIsOpenYn())
+                .isRecruiting(true)
+                .leaderId(userId)
+                .build();
+        return meetup;
     }
 
-    @Override
-    public boolean isNew() {
-        return false;
-    }
-
-//    public MeetUp of(String userId, CreateMeetUpDto dto) {
-//        MeetUp meetup = MeetUp.builder()
-//                .
-//    }
 }
