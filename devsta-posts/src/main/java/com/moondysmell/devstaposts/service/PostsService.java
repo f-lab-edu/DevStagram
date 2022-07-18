@@ -69,6 +69,7 @@ public class PostsService {
                 query,
                 update,
                 Posts.class);
+
         if (updateResult.getModifiedCount() == 0) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
         return mongoTemplate.findOne(new Query(Criteria.where("id").is(postId)), Posts.class);
     }
