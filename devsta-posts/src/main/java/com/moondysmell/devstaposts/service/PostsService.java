@@ -81,9 +81,9 @@ public class PostsService {
         update.set("pictureUrl", newPosts.getPictureUrl());
         update.set("updateDt", LocalDateTime.now());
 
-        UpdateResult updateResult = mongoTemplate.upsert(query, update, Posts.class);
+        posts = mongoTemplate.findAndModify(query, update, Posts.class);
 
-        if (updateResult.getModifiedCount() == 0) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
+        //if (updateResult.getModifiedCount() == 0) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
         return mongoTemplate.findOne(new Query(Criteria.where("id").is(postId)), Posts.class);
     }
 
