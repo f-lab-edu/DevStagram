@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,9 @@ public class PostsController {
     }
 
 
+    //피드 생성
     @PostMapping("/create")
-    public CommonResponse save(@RequestBody PostsSaveRequestDto postsSaveRequestDto){
+    public CommonResponse save(@RequestBody PostsSaveRequestDto postsSaveRequestDto, @RequestHeader String userId){
         // 유저 세션이 없을때 예외처리 (추후)
 //            throw new 로그인한 유저의 정보가 없습니다.
 
@@ -37,7 +39,7 @@ public class PostsController {
             String contents = postsSaveRequestDto.getContents();
             if(contents.isEmpty()) throw new CustomException(CommonCode.CONTENT_IS_MANDATORY);
 
-            Posts savePosts = postsService.save(postsSaveRequestDto);
+            Posts savePosts = postsService.savePost(postsSaveRequestDto, userId);
             return new CommonResponse(CommonCode.SUCCESS, Map.of("savePosts", savePosts));
         }catch (Exception e){
             log.error(">>>" + e.getMessage());
@@ -46,6 +48,7 @@ public class PostsController {
 
     }
 
+    //모든 피드 조회(타임라인) - 최신순
     @GetMapping("/timeline")
     public CommonResponse viewAll(){
 
@@ -59,6 +62,7 @@ public class PostsController {
 
     }
 
+    //내 피드만 조회(프로필)
     @GetMapping("/myFeed")
     public CommonResponse<List<Posts>> viewMyFeed(@RequestHeader("userId") String userId){
 
@@ -96,10 +100,21 @@ public class PostsController {
 
     }
 
+    //피드 삭제
     @GetMapping("/delete/{postId}")
     public CommonResponse deletePost(@PathVariable String postId,  @RequestHeader("userId") String userId){
         postsService.delete(postId, userId);
         return new CommonResponse(CommonCode.SUCCESS);
+    }
+
+    //좋아요 클릭
+    @PostMapping("/like/{postId}")
+    public CommonResponse like(@PathVariable Long postId, @RequestHeader String userId){
+        int heartCount = postsService.like(postId, userId);
+
+        HashMap attribute = new HashMap();
+        attribute.put("heartCount", heartCount);
+        return new CommonResponse(CommonCode.SUCCESS, attribute);
     }
 
 }

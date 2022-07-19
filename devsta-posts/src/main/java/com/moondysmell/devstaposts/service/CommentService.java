@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,9 @@ public class CommentService {
                 .postId(commentDto.getPostId())
                 .commentUser(userId)
                 .contents(commentDto.getContents())
+                .createDt(LocalDateTime.now())
+                .updateDt(LocalDateTime.now())
+
                 .build();
 
         return mongoTemplate.insert(comments,COLLECTION_NAME);
@@ -61,6 +65,7 @@ public class CommentService {
                     .andOperator(Criteria.where("commentUser").is(userId)));
             Update update = new Update();
             update.set("contents", commentDto.getContents());
+            update.set("updateDt", LocalDateTime.now());
 
             //UpdateResult updateResult
             comments = mongoTemplate.findAndModify(

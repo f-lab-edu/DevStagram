@@ -11,7 +11,6 @@ import java.util.Date;
 @Builder
 public class PostsSaveRequestDto {
 
-    private String userId;
     private String contents;
     private String pictureUrl;
 
@@ -26,7 +25,6 @@ public class PostsSaveRequestDto {
 
     public Posts toEntity(){
         return Posts.builder()
-                .userId(userId)
                 .contents(contents)
                 .pictureUrl(pictureUrl)
                 .build();
