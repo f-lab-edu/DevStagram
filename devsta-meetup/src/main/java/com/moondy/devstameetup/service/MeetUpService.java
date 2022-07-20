@@ -18,8 +18,6 @@ public class MeetUpService {
     private final MeetUpCategoryRepository meetUpCategoryRepository;
     private final MeetUpRepository meetUpRepository;
     private final MongoTemplate mongoTemplate;
-    final static private String CATEGORY_COLLECTION_NAME = "MeetUpCategory";
-    final static private String MEETUP_COLLECTION_NAME = "MeetUp";
 
     //안쓰는 함수. 언제 쓸지 모르니 킵
 //    public String getCategoryCode(String categoryDisplay) {
@@ -36,9 +34,8 @@ public class MeetUpService {
         return true;
    }
 
-   public MeetUp saveMeetUp(String userId, CreateMeetUpDto dto) {
-       MeetUp newMeetUp = MeetUp.of(userId, dto);
-       return meetUpRepository.save(newMeetUp);
+   public MeetUp saveMeetUp(MeetUp meetUp) {
+       return meetUpRepository.save(meetUp);
    }
 
 }

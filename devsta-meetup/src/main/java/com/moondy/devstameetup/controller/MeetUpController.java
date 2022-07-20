@@ -22,8 +22,8 @@ public class MeetUpController {
     public CommonResponse createMeetup (@RequestHeader("userId") String userId, @RequestBody CreateMeetUpDto meetUpDto) {
         //category 있는지 확인
         meetUpService.isExistCategory(meetUpDto.getCategory());
-        MeetUp newMeetUp = meetUpService.saveMeetUp(userId, meetUpDto);
+        MeetUp newMeetUp = meetUpService.saveMeetUp(meetUpDto.toDao(userId));
         //카테고리에서 id 찾아서 넣어주
-        return new CommonResponse(CommonCode.SUCCESS, Map.of("result", newMeetUp));
+        return new CommonResponse(CommonCode.SUCCESS, Map.of("result", newMeetUp.toDto()));
     }
 }

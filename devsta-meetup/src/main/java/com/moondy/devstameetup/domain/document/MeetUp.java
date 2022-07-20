@@ -1,6 +1,6 @@
 package com.moondy.devstameetup.domain.document;
 
-import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
+import com.moondy.devstameetup.domain.dto.MeetUpDto;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -44,18 +44,18 @@ public class MeetUp {
     @Field("leader_id")
     private String leaderId;
 
-    public static MeetUp of(String userId, CreateMeetUpDto dto) {
-        MeetUp meetup = MeetUp.builder()
-                .category(dto.getCategory())
-                .title(dto.getTitle())
-                .contents(dto.getContents())
-                .maxPeople(dto.getMaxPeople())
-                .memberId(List.of())
-                .isOpenYn(dto.getIsOpenYn())
-                .isRecruiting(true)
-                .leaderId(userId)
+    public MeetUpDto toDto() {
+        return MeetUpDto.builder()
+                .id(this.id.toString())
+                .category(this.category)
+                .title(this.title)
+                .contents(this.contents)
+                .maxPeople(this.maxPeople)
+                .memberId(this.memberId)
+                .isOpenYn(this.isOpenYn)
+                .isRecruiting(this.isRecruiting)
+                .leaderId(this.leaderId)
                 .build();
-        return meetup;
     }
 
 }
