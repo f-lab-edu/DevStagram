@@ -21,7 +21,10 @@ public enum CommonCode {
     NO_QUALIFICATION_USER(400,-3001, "권한이 없습니다."),
     NOT_MATCH_WRITER(400, -3002, "작성자만 수행가능한 작업입니다."),
     NOT_FOUNT_CONTENTS(400, -3003, "존재하지 않는 게시글입니다."),
-    POST_UPDATE_FAIL(400, -3004, "수정 실패");
+    POST_UPDATE_FAIL(400, -3004, "게시글 수정 실패"),
+    NOT_FOUNT_COMMENTS(400, -3005, "존재하지 않는 댓글입니다."),
+    COMMENT_UPDATE_FAIL(400, -3006, "댓글 수정 실패"),
+    COMMENT_NO_CHANGE(400, -3007, "변경사항 없음");
 
     //-4000: Gateway
 

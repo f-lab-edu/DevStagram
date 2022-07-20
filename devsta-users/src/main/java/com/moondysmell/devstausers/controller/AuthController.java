@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @AllArgsConstructor
 @RestController
 @Slf4j
@@ -25,12 +27,15 @@ public class AuthController {
     private final DevUserService devUserService;
     private final String DEFAULT_PICTURE_URL = "https://toppng.com//public/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png";
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public CommonResponse signIn(@RequestBody LoginDto requestBody) {
         DevUser user = devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
-        HashMap<String, DevUser> attribute = new HashMap<>();
-        attribute.put("devUser", user);
-        return new CommonResponse<DevUser>(CommonCode.SUCCESS, attribute);
+        //pasing 하기 쉽게 HashMap 사용(depth 최대한 얕게)
+        HashMap<String, String> attribute = new HashMap<>();
+        attribute.put("id", user.getId().toString());
+        attribute.put("nickname", user.getNickname().toString());
+        attribute.put("email", user.getEmail());
+        return new CommonResponse<String>(CommonCode.SUCCESS, attribute);
     }
 
     @PostMapping("/changePW")
@@ -52,10 +57,7 @@ public class AuthController {
         }
         try {
             DevUser savedUser = devUserService.saveDetail(userDetailDto);
-            HashMap attribute = new HashMap();
-            attribute.put("userId", savedUser.getId().toString());
-            attribute.put("email", savedUser.getEmail());
-            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, attribute);
+            if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
             return new CommonResponse(CommonCode.FAIL);
 
         }catch (Exception e) {
@@ -71,3 +73,4 @@ public class AuthController {
 
 
 }
+

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Posts implements Persistable<String>{
 
     @Transient
@@ -48,6 +50,7 @@ public class Posts implements Persistable<String>{
     @Field("update_dt")
     @LastModifiedDate
     private Date updateDt;
+
 
     @Override
     public String getId() {

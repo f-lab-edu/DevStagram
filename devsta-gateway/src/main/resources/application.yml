@@ -1,3 +1,6 @@
+uri:
+  user-service: "http://localhost:9090"
+  post-service: "http://localhost:9091"
 server:
   port: 9999
 spring:
@@ -6,8 +9,52 @@ spring:
   profiles:
     active: default
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: "optional:configserver:"
     #use-legacy-processing: true #unable to laod config data 오류 발생 시 사용
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - PUT
+              - GET
+              - POST
+      routes:
+        - id: user-service
+          uri: ${uri.user-service}
+          predicates:
+            - Path=/api/user/profile/**
+          filters:
+            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - UserJwtFilter
+        - id: guest-user-service
+          uri: ${uri.user-service}
+          predicates:
+            - Path=/api/guest/profile/**
+          filters:
+            - RewritePath=/api/guest/(?<path>.*),/$\{path}
+            - GuestFilter
+        - id: post-service
+          uri: ${uri.post-service}
+          predicates:
+            - Path=/api/user/posts/**
+          filters:
+            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - UserJwtFilter
+        - id: guest-post-service
+          uri: ${uri.post-service}
+          predicates:
+            - Path=/api/guest/posts/**
+          filters:
+            - RewritePath=/api/guest/(?<path>.*),/$\{path}
+            - GuestFilter
+jwt:
+  secret: moondysmellwebapplicationsecret
+  expiration-second: 172800  #48시간
+#  expiration-second: 259200  #72시간
+#  expiration-second: 10  #10초
 
 
 

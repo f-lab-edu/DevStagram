@@ -11,11 +11,13 @@ import java.io.Serializable;
 @Data
 @Getter
 public class UserSummaryDto implements Serializable {
+    private String id;
     private String nickname;
     private String pictureUrl;
     private String email;
 
     public UserSummaryDto(DevUser devUser) {
+        this.id = devUser.getId().toString();
         this.nickname = devUser.getNickname();
         this.email = devUser.getEmail();
         this.pictureUrl = devUser.getPictureUrl();
