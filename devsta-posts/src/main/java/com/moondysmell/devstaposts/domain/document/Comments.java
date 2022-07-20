@@ -10,6 +10,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Document(collection = "Comments")
@@ -37,12 +38,12 @@ public class Comments implements Persistable<Long> {
 
     @Field("create_dt")
     @CreatedDate
-    private Date createDt;
+    private LocalDateTime createDt;
 
 
     @Field("update_dt")
     @LastModifiedDate
-    private Date updateDt;
+    private LocalDateTime updateDt;
 
     @Override
     public boolean isNew()  {

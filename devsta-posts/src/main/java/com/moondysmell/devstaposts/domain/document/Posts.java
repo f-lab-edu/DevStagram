@@ -33,23 +33,24 @@ public class Posts implements Persistable<String>{
     @Field("user_id")
     @CreatedBy
     private String userId;
-    @Setter
+
+    @Field
     private String contents;
 
     @Field("hearts_count")
-    private String heartsCount;
+    private List<String> heartsCount;
 
     @Field("picture_url")
     private String pictureUrl;
 
     @Field("create_dt")
     @CreatedDate
-    private Date createDt;
+    private LocalDateTime createDt;
 
 
     @Field("update_dt")
     @LastModifiedDate
-    private Date updateDt;
+    private LocalDateTime updateDt;
 
 
     @Override

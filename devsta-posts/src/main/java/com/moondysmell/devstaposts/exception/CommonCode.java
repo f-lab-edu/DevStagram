@@ -24,7 +24,8 @@ public enum CommonCode {
     POST_UPDATE_FAIL(400, -3004, "게시글 수정 실패"),
     NOT_FOUNT_COMMENTS(400, -3005, "존재하지 않는 댓글입니다."),
     COMMENT_UPDATE_FAIL(400, -3006, "댓글 수정 실패"),
-    COMMENT_NO_CHANGE(400, -3007, "변경사항 없음");
+    COMMENT_NO_CHANGE(400, -3007, "변경사항 없음"),
+    ALREADY_LIKE(400, -3008, "이미 좋아요를 누른 유저입니다.");
 
     //-4000: Gateway
 
