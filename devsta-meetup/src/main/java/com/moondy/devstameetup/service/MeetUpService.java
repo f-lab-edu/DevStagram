@@ -4,12 +4,20 @@ import com.moondy.devstameetup.common.CommonCode;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
+import com.moondy.devstameetup.domain.dto.MeetUpDto;
+import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
 import com.moondy.devstameetup.repository.MeetUpRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,5 +45,18 @@ public class MeetUpService {
    public MeetUp saveMeetUp(MeetUp meetUp) {
        return meetUpRepository.save(meetUp);
    }
+
+   public List<MeetUp> getRecentMeetUp(int fromPage, int toPage) {
+       return mongoTemplate.find(new Query().with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+       //dto로 리턴하고 싶을 때
+//       return meetUpList.stream().map(it -> it.toDto()).collect(Collectors.toList());
+   }
+
+    public List<MeetUpSummaryDto> getRecentMeetUpSummary(int fromPage, int toPage) {
+        List<MeetUp> meetUpList = mongoTemplate.find(new Query().with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+       return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
+    }
+
+
 
 }

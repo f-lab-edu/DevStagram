@@ -1,8 +1,10 @@
 package com.moondy.devstameetup.domain.document;
 
 import com.moondy.devstameetup.domain.dto.MeetUpDto;
+import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -15,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MeetUp {
-
     @Id
     @Field("_id")
     private ObjectId id;
@@ -57,5 +58,23 @@ public class MeetUp {
                 .leaderId(this.leaderId)
                 .build();
     }
+
+    public MeetUpSummaryDto toSummaryDto() {
+        return MeetUpSummaryDto.builder()
+                .id(this.id.toString())
+                .category(this.category)
+                .title(this.title)
+                .contents(this.contents.length() > 50 ? this.contents.substring(0,50) : this.contents )
+                .maxPeople(this.maxPeople)
+                .memberCount(this.memberId.size())
+                .isOpenYn(this.isOpenYn)
+                .isRecruiting(this.isRecruiting)
+                .leaderId(this.leaderId)
+                .build();
+    }
+
+
+
+
 
 }
