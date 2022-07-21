@@ -2,7 +2,9 @@ package com.moondy.devstameetup.common;
 
 import org.springframework.http.HttpStatus;
 
-public class CustomException extends RuntimeException {
+import java.util.function.Supplier;
+
+public class CustomException extends RuntimeException{
 
     private CommonCode commonCode;
 

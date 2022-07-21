@@ -13,13 +13,10 @@ public enum CommonCode {
     FAIL(500, -1, "실패. 알 수 없는 오류"),
 
     //-1000: USER
-    NOT_EXIST_ID(200,-1000, "존재하지 않는 이메일입니다."),
-    WRONG_PASSWORD(200, -1001, "비밀번호가 일치하지 않습니다."),
-    USER_ALREADY_EXIST(200, -1002, "해당 아이디가 이미 존재합니다."),
-    NICKNAME_ALREADY_EXIT(200, -1003 , "중복된 닉네임입니다." ),
 
     //-2000: MeetUp
-    NOT_EXIST_CATEGORY_VALUE(400, -2000, "존재하지 않는 카테고리 입니다.");
+    CATEGORY_VALUE_NOT_EXIST(400, -2000, "존재하지 않는 카테고리 입니다."),
+    MEETUP_NOT_EXIST(400, -2001, "존재하지 않는 밋업입니다.");
     //-3000: Posts
 
     //-4000: Gateway

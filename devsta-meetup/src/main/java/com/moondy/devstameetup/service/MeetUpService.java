@@ -3,8 +3,7 @@ package com.moondy.devstameetup.service;
 import com.moondy.devstameetup.common.CommonCode;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
-import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
-import com.moondy.devstameetup.domain.dto.MeetUpDto;
+import com.moondy.devstameetup.domain.document.MeetUpCategory;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
 import com.moondy.devstameetup.repository.MeetUpRepository;
@@ -13,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,17 +28,15 @@ public class MeetUpService {
     private final MeetUpRepository meetUpRepository;
     private final MongoTemplate mongoTemplate;
 
-    //안쓰는 함수. 언제 쓸지 모르니 킵
-//    public String getCategoryCode(String categoryDisplay) {
-//        Query query = new Query(Criteria.where("displayName").is(categoryDisplay));
-//        MeetUpCategory category = mongoTemplate.findOne(query, MeetUpCategory.class);
-//        if (category == null) throw new CustomException(CommonCode.NOT_EXIST_CATEGORY_VALUE);
-//        return category.getCode();
-//   }
+    public List<MeetUpSummaryDto> getRecentMeetUpSummaryByCategory(int fromPage, int toPage, String category) {
+        Query query = new Query(Criteria.where("category").is(category));
+        List<MeetUp> meetUpList = mongoTemplate.find(query.with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
+   }
 
    public Boolean isExistCategory(String categoryCode) {
         if (meetUpCategoryRepository.findById(categoryCode).isEmpty()) {
-            throw new CustomException(CommonCode.NOT_EXIST_CATEGORY_VALUE);
+            throw new CustomException(CommonCode.CATEGORY_VALUE_NOT_EXIST);
         }
         return true;
    }
@@ -58,5 +57,12 @@ public class MeetUpService {
     }
 
 
+    public List<MeetUpCategory> getCategory() {
+        return meetUpCategoryRepository.findAll();
+    }
 
+    public MeetUp getOneMeetUp(String meetUpId) {
+        Optional<MeetUp> meetup = meetUpRepository.findById(meetUpId);
+        return meetup.orElseThrow(() -> new CustomException(CommonCode.MEETUP_NOT_EXIST));
+    }
 }
