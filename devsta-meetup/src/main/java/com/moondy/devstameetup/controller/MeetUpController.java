@@ -8,6 +8,7 @@ import com.moondy.devstameetup.domain.document.MeetUpCategory;
 import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
 import com.moondy.devstameetup.domain.dto.MeetUpDto;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
+import com.moondy.devstameetup.domain.dto.UpdateMeetUpDto;
 import com.moondy.devstameetup.service.MeetUpService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +62,15 @@ public class MeetUpController {
     }
 
     @GetMapping("/getOneMeetUp")
-    public CommonResponse getMeetSummaries(@RequestParam String meetUpId) {
+    public CommonResponse getOneMeetUp(@RequestParam String meetUpId) {
         MeetUp meetUp = meetUpService.getOneMeetUp(meetUpId);
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
+    }
+
+    @PostMapping("/update")
+    public CommonResponse updateMeetUp(@RequestBody UpdateMeetUpDto dto) {
+        MeetUp result = meetUpService.updateMeetUp(dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result.toDto()));
     }
 
 }

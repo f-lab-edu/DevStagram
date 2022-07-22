@@ -4,16 +4,20 @@ import com.moondy.devstameetup.common.CommonCode;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.document.MeetUpCategory;
+import com.moondy.devstameetup.domain.dto.MeetUpDto;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
+import com.moondy.devstameetup.domain.dto.UpdateMeetUpDto;
 import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
 import com.moondy.devstameetup.repository.MeetUpRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,5 +68,28 @@ public class MeetUpService {
     public MeetUp getOneMeetUp(String meetUpId) {
         Optional<MeetUp> meetup = meetUpRepository.findById(meetUpId);
         return meetup.orElseThrow(() -> new CustomException(CommonCode.MEETUP_NOT_EXIST));
+    }
+
+    public MeetUp updateMeetUp(UpdateMeetUpDto dto) {
+        isExistCategory(dto.getCategory());
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(dto.getId()));
+
+        Update update = new Update();
+        update.set("category", dto.getCategory());
+        update.set("title", dto.getTitle());
+        update.set("contents", dto.getContents());
+        update.set("maxPeople", dto.getMaxPeople());
+        update.set("isOpenYn", dto.getIsOpenYn());
+        update.set("isRecruiting", dto.getIsRecruiting());
+
+        // 수정 후 결과를 리턴해주도록 옵션 설정
+        FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
+
+        MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);
+        if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
+
+        return meetUp;
     }
 }
