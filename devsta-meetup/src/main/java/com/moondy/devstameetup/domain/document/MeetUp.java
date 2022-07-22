@@ -4,7 +4,6 @@ import com.moondy.devstameetup.domain.dto.MeetUpDto;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import lombok.*;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;

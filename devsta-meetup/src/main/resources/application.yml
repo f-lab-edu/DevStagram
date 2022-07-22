@@ -9,4 +9,3 @@ spring:
     include: db
   config:
     import: "optional:configserver:"
-

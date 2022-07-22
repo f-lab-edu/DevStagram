@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class MeetUpController {
     private static final String CATEGORY_ALL = "ALL";
 
     @PostMapping("/create")
-    public CommonResponse createMeetup(@RequestHeader("userId") String userId, @RequestBody CreateMeetUpDto meetUpDto) throws CustomException{
+    public CommonResponse createMeetup(@RequestHeader("userId") String userId, @RequestBody @Valid CreateMeetUpDto meetUpDto) throws CustomException{
         //category 있는지 확인. 잘못된 카테고리로 create하면 추후 조회 안될 수 있으니 검사
         meetUpService.isExistCategory(meetUpDto.getCategory());
         MeetUp newMeetUp = meetUpService.saveMeetUp(meetUpDto.toDao(userId));
@@ -68,7 +69,7 @@ public class MeetUpController {
     }
 
     @PostMapping("/update")
-    public CommonResponse updateMeetUp(@RequestBody UpdateMeetUpDto dto) {
+    public CommonResponse updateMeetUp(@RequestBody @Valid UpdateMeetUpDto dto) {
         MeetUp result = meetUpService.updateMeetUp(dto);
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result.toDto()));
     }
