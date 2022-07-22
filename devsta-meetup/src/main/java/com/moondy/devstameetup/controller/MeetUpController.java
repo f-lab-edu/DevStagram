@@ -69,14 +69,14 @@ public class MeetUpController {
     }
 
     @PostMapping("/update")
-    public CommonResponse updateMeetUp(@RequestBody @Valid UpdateMeetUpDto dto) {
-        MeetUp result = meetUpService.updateMeetUp(dto);
+    public CommonResponse updateMeetUp(@RequestHeader("userId") String userId, @RequestBody @Valid UpdateMeetUpDto dto) {
+        MeetUp result = meetUpService.updateMeetUp(dto, userId);
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result.toDto()));
     }
 
     @DeleteMapping("/delete")
-    public CommonResponse deleteMeetUp(@RequestParam String id){
-        Boolean result = meetUpService.deleteMeetUp(id);
+    public CommonResponse deleteMeetUp(@RequestHeader("userId") String userId, @RequestParam String id){
+        Boolean result = meetUpService.deleteMeetUp(id, userId);
         if (result){
             return new CommonResponse(CommonCode.SUCCESS);
         }

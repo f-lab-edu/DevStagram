@@ -70,11 +70,12 @@ public class MeetUpService {
         return meetup.orElseThrow(() -> new CustomException(CommonCode.MEETUP_NOT_EXIST));
     }
 
-    public MeetUp updateMeetUp(UpdateMeetUpDto dto) {
+    public MeetUp updateMeetUp(UpdateMeetUpDto dto, String userId) {
         isExistCategory(dto.getCategory());
 
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(dto.getId()));
+        query.addCriteria(Criteria.where("leaderId").is(userId));
 
         Update update = new Update();
         update.set("category", dto.getCategory());
@@ -93,7 +94,8 @@ public class MeetUpService {
         return meetUp;
     }
 
-    public Boolean deleteMeetUp(String id) {
+    public Boolean deleteMeetUp(String id, String userId) {
+        if (!meetUpRepository.findById(id).get().getLeaderId().equals(userId)) throw new CustomException(CommonCode.NO_PERMISSION);
         meetUpRepository.deleteById(id);
         return meetUpRepository.findById(id).isEmpty();
     }
