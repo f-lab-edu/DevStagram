@@ -30,12 +30,12 @@ class DevstapostsApplicationTests {
 //		this.writer = userRepository.findAll();
 //	}
 
-	@Test
-	public void save() {
-
-		PostsSaveRequestDto postsSaveRequestDto = PostsSaveRequestDto.builder().userId("향긔1").contents("성공했음좋겠다")
-				.pictureUrl(null).build();
-		postsService.save(postsSaveRequestDto);
-
-	}
+//	@Test
+//	public void save() {
+//
+//		PostsSaveRequestDto postsSaveRequestDto = PostsSaveRequestDto.builder().userId("smell").contents("성공했음좋겠다")
+//				.pictureUrl(null).build();
+//		postsService.save(postsSaveRequestDto);
+//
+//	}
 }
