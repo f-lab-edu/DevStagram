@@ -92,4 +92,9 @@ public class MeetUpService {
 
         return meetUp;
     }
+
+    public Boolean deleteMeetUp(String id) {
+        meetUpRepository.deleteById(id);
+        return meetUpRepository.findById(id).isEmpty();
+    }
 }

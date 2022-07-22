@@ -73,4 +73,10 @@ public class MeetUpController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result.toDto()));
     }
 
+    @DeleteMapping("/delete")
+    public CommonResponse deleteMeetUp(@RequestParam String id){
+        Boolean result = meetUpService.deleteMeetUp(id);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result));
+    }
+
 }
