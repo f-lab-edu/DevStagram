@@ -17,7 +17,8 @@ public enum CommonCode {
     //-2000: MeetUp
     CATEGORY_VALUE_NOT_EXIST(400, -2000, "존재하지 않는 카테고리 입니다."),
     MEETUP_NOT_EXIST(400, -2001, "존재하지 않는 밋업입니다."),
-    UPDATE_FAILED(500, -2002, "수정에 실패했습니다.");
+    UPDATE_FAILED(500, -2002, "수정에 실패했습니다."),
+    DELETE_FAILED(500, -2004, "삭제에 실패했습니다.");
     //-3000: Posts
 
     //-4000: Gateway
