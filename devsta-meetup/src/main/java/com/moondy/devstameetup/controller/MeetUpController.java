@@ -5,18 +5,13 @@ import com.moondy.devstameetup.common.CommonResponse;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.document.MeetUpCategory;
-import com.moondy.devstameetup.domain.dto.CreateMeetUpDto;
-import com.moondy.devstameetup.domain.dto.MeetUpDto;
-import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
-import com.moondy.devstameetup.domain.dto.UpdateMeetUpDto;
+import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.service.MeetUpService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +76,18 @@ public class MeetUpController {
             return new CommonResponse(CommonCode.SUCCESS);
         }
         return new CommonResponse(CommonCode.DELETE_FAILED);
+    }
+
+    @PostMapping("/join")
+    public CommonResponse joinMeetUp(@RequestHeader("userId") String userId, @RequestBody JoinMeetUpDto dto) {
+        MeetUp meetUp = meetUpService.joinMeetUp(userId, dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
+    }
+
+    @PostMapping("/accept")
+    public CommonResponse acceptMember(@RequestHeader("userId") String userId, @RequestBody AcceptMemberDto dto) {
+        MeetUp meetUp = meetUpService.acceptMember(userId, dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
     }
 
 }

@@ -35,6 +35,7 @@ public class CreateMeetUpDto {
                 .contents(this.getContents())
                 .maxPeople(this.getMaxPeople())
                 .memberId(List.of())
+                .pendingId(List.of())
                 .isOpenYn(this.getIsOpenYn())
                 .isRecruiting(true)
                 .leaderId(userId)

@@ -35,6 +35,9 @@ public class MeetUp {
     @Field("member_id")
     private List<String> memberId;
 
+    @Field("pending_id")
+    private List<String> pendingId;
+
     @Field("is_open_yn")
     private Boolean isOpenYn;
 
@@ -52,6 +55,7 @@ public class MeetUp {
                 .contents(this.contents)
                 .maxPeople(this.maxPeople)
                 .memberId(this.memberId)
+                .pendingId(this.pendingId)
                 .isOpenYn(this.isOpenYn)
                 .isRecruiting(this.isRecruiting)
                 .leaderId(this.leaderId)

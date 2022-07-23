@@ -4,7 +4,8 @@ import com.moondy.devstameetup.common.CommonCode;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.document.MeetUpCategory;
-import com.moondy.devstameetup.domain.dto.MeetUpDto;
+import com.moondy.devstameetup.domain.dto.AcceptMemberDto;
+import com.moondy.devstameetup.domain.dto.JoinMeetUpDto;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import com.moondy.devstameetup.domain.dto.UpdateMeetUpDto;
 import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
@@ -98,5 +99,55 @@ public class MeetUpService {
         if (!meetUpRepository.findById(id).get().getLeaderId().equals(userId)) throw new CustomException(CommonCode.NO_PERMISSION);
         meetUpRepository.deleteById(id);
         return meetUpRepository.findById(id).isEmpty();
+    }
+
+    public MeetUp joinMeetUp(String userId, JoinMeetUpDto dto) {
+        MeetUp target = getOneMeetUp(dto.getMeetUpId());
+        Query query = new Query();
+        Update update = new Update();
+        //이미 참여중인지 확인, 이미 보류(밋업 대기)중인지 확인
+        List<String> memberList = target.getMemberId();
+        List<String> pendingList = target.getPendingId();
+        if (memberList.contains(userId) || target.getLeaderId().equals(userId)) throw new CustomException(CommonCode.ALREADY_JOINED);
+        if (pendingList.contains(userId)) throw new CustomException(CommonCode.ALREADY_PENDING);
+        //추가
+        if (dto.getIsOpenYn()) {
+            memberList.add(userId);
+            query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
+            update.set("memberId", memberList);
+        } else {
+            pendingList.add(userId);
+            query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
+            update.set("pendingId", pendingList);
+        }
+
+        // 수정 후 결과를 리턴해주도록 옵션 설정
+        FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
+        MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);
+        if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
+        return meetUp;
+    }
+
+    public MeetUp acceptMember(String userId, AcceptMemberDto dto) {
+        MeetUp target = getOneMeetUp(dto.getMeetUpId());
+        //리더인지 확인
+        if (!target.getLeaderId().equals(userId)) throw new CustomException(CommonCode.NO_PERMISSION);
+
+        Query query = new Query();
+        Update update = new Update();
+        List<String> memberList = target.getMemberId();
+        List<String> pendingList = target.getPendingId();
+
+        query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
+        memberList.add(userId);
+        pendingList.remove(userId);
+        update.set("memberId", memberList);
+        update.set("pendingId", pendingList);
+
+        // 수정 후 결과를 리턴해주도록 옵션 설정
+        FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
+        MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);
+        if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
+        return meetUp;
     }
 }
