@@ -61,6 +61,15 @@ public class MeetUpService {
        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
     }
 
+    public List<MeetUpSummaryDto> getRecentMyMeetUpSummary(String userId, int fromPage, int toPage) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("leaderId").is(userId));
+        query.with(Sort.by(Sort.Direction.DESC, "id"));
+        query.with(PageRequest.of(fromPage, toPage));
+        List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
+        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
+    }
+
 
     public List<MeetUpCategory> getCategory() {
         return meetUpCategoryRepository.findAll();
