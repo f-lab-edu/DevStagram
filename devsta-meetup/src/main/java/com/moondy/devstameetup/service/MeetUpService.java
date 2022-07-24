@@ -4,10 +4,7 @@ import com.moondy.devstameetup.common.CommonCode;
 import com.moondy.devstameetup.common.CustomException;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.document.MeetUpCategory;
-import com.moondy.devstameetup.domain.dto.AcceptMemberDto;
-import com.moondy.devstameetup.domain.dto.JoinMeetUpDto;
-import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
-import com.moondy.devstameetup.domain.dto.UpdateMeetUpDto;
+import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
 import com.moondy.devstameetup.repository.MeetUpRepository;
 import lombok.AllArgsConstructor;
@@ -197,4 +194,22 @@ public class MeetUpService {
         if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
         return meetUp;
     }
+
+    public String getMeetUpStatus(String userId, String meetUpId) {
+        MeetUp target = getOneMeetUp(meetUpId);
+        if (target.getLeaderId().equals(userId)){
+            return OWNED;
+        } else if (target.getMemberId().contains(userId)) {
+            return JOINED;
+        } else if (target.getPendingId().contains(userId)) {
+            return PENDING;
+        }
+        return UNRELATED;
+    }
+
+    //오타 줄이기 위해. 만약 코드가 아닌 display name 으로 리턴해야하면 value를 수정
+    private static final String OWNED = "OWNED";
+    private static final String JOINED = "JOINED";
+    private static final String PENDING = "PENDING";
+    private static final String UNRELATED = "UNRELATED";
 }

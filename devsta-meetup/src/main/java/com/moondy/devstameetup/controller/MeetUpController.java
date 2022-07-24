@@ -75,6 +75,12 @@ public class MeetUpController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
     }
 
+    @GetMapping("/getMeetUpStatus")
+    public CommonResponse getMeetUpStatus(@RequestHeader("userId") String userId, @RequestParam String meetUpId) {
+        String status = meetUpService.getMeetUpStatus(userId, meetUpId);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, status));
+    }
+
     @PostMapping("/update")
     public CommonResponse updateMeetUp(@RequestHeader("userId") String userId, @RequestBody @Valid UpdateMeetUpDto dto) {
         MeetUp result = meetUpService.updateMeetUp(dto, userId);
