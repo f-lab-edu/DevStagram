@@ -70,6 +70,17 @@ public class MeetUpService {
         return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
     }
 
+    public List<MeetUpSummaryDto> getJoinedMeetUpSummary(String userId, int fromPage, int toPage) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        // memberId 또는 pendingId에 user가 있으면
+        criteria.orOperator(Criteria.where("memberId").all(userId), Criteria.where("pendingId").all(userId));
+        query.addCriteria(criteria);
+        query.with(Sort.by(Sort.Direction.DESC, "id"));
+        query.with(PageRequest.of(fromPage, toPage));
+        List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
+        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
+    }
 
     public List<MeetUpCategory> getCategory() {
         return meetUpCategoryRepository.findAll();

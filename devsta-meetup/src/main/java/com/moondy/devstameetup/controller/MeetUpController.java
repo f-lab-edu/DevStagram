@@ -63,6 +63,12 @@ public class MeetUpController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
     }
 
+    @GetMapping("/getJoinedMeetUp")
+    public CommonResponse getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int fromPage, @RequestParam int toPage) {
+        List<MeetUpSummaryDto> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, fromPage, toPage);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+    }
+
     @GetMapping("/getOneMeetUp")
     public CommonResponse getOneMeetUp(@RequestParam String meetUpId) {
         MeetUp meetUp = meetUpService.getOneMeetUp(meetUpId);
