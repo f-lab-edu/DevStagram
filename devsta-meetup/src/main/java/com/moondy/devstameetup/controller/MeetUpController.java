@@ -67,16 +67,6 @@ public class MeetUpController {
         } else {
             meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
-        List<EntityModel<MeetUpSummaryDto>> wrappedList = meetUpList.stream().map(dto -> {
-            // Java Stream을 이용하여 각 Employee 객체의 엔티티 모델 생성.
-            EntityModel<MeetUpSummaryDto> entityModel = EntityModel.of(dto);
-            // 각 엔티티 모델마다 "/employees", "/employees/{id}" 링크 추가.
-            entityModel.add(Link.of(String.format("/getOneMeetUp?meetUpId=%s", dto.getId()), "detail"));
-            return entityModel;
-            // 컬렉션으로 반환.
-        }).collect(Collectors.toList());
-        CollectionModel<EntityModel<MeetUpSummaryDto>> result = CollectionModel.of(wrappedList);
-        result.add(Link.of(String.format("/getMeetUpSummaries/%s?page=%d&size=%d", category, page+1, size), "next"));
 
         // 각 Employee 객체마다 엔티티 모델 생성
         List<EntityModel<MeetUpSummaryDto>> detail = meetUpList.stream().map(meetUp -> {
