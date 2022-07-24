@@ -21,7 +21,8 @@ public enum CommonCode {
     DELETE_FAILED(500, -2004, "삭제에 실패했습니다."),
     NO_PERMISSION(400, -2005, "권한이 없습니다."),
     ALREADY_JOINED(400, -2006, "이미 참여중인 밋업입니다."),
-    ALREADY_PENDING(400, -2007, "이미 참여 대기중인 밋업입니다.");
+    ALREADY_PENDING(400, -2007, "이미 참여 대기중인 밋업입니다."),
+    NOT_IN_PENDING_LIST(400, -2008, "참여 대기 리스트에 없는 유저입니다.");
     //-3000: Posts
 
     //-4000: Gateway

@@ -85,14 +85,7 @@ public class MeetUpService {
         update.set("maxPeople", dto.getMaxPeople());
         update.set("isOpenYn", dto.getIsOpenYn());
         update.set("isRecruiting", dto.getIsRecruiting());
-
-        // 수정 후 결과를 리턴해주도록 옵션 설정
-        FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
-
-        MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);
-        if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
-
-        return meetUp;
+        return updateMember(query, update);
     }
 
     public Boolean deleteMeetUp(String id, String userId) {
@@ -111,7 +104,7 @@ public class MeetUpService {
         if (memberList.contains(userId) || target.getLeaderId().equals(userId)) throw new CustomException(CommonCode.ALREADY_JOINED);
         if (pendingList.contains(userId)) throw new CustomException(CommonCode.ALREADY_PENDING);
         //추가
-        if (dto.getIsOpenYn()) {
+        if (target.getIsOpenYn()) {
             memberList.add(userId);
             query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
             update.set("memberId", memberList);
@@ -120,15 +113,30 @@ public class MeetUpService {
             query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
             update.set("pendingId", pendingList);
         }
-
-        // 수정 후 결과를 리턴해주도록 옵션 설정
-        FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
-        MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);
-        if (meetUp == null) throw new CustomException(CommonCode.UPDATE_FAILED);
-        return meetUp;
+        return updateMember(query, update);
     }
 
     public MeetUp acceptMember(String userId, AcceptMemberDto dto) {
+        MeetUp target = getOneMeetUp(dto.getMeetUpId());
+        //리더인지 확인
+        if (!target.getLeaderId().equals(userId)) throw new CustomException(CommonCode.NO_PERMISSION);
+        // 대기중 리스트에 있는지 확인
+        if (!target.getPendingId().contains(dto.getMemberId())) throw new CustomException(CommonCode.NOT_IN_PENDING_LIST);
+
+        Query query = new Query();
+        Update update = new Update();
+        List<String> memberList = target.getMemberId();
+        List<String> pendingList = target.getPendingId();
+
+        query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
+        memberList.add(dto.getMemberId());
+        pendingList.remove(dto.getMemberId());
+        update.set("memberId", memberList);
+        update.set("pendingId", pendingList);
+        return updateMember(query, update);
+    }
+
+    public MeetUp removeMember(String userId, AcceptMemberDto dto) {
         MeetUp target = getOneMeetUp(dto.getMeetUpId());
         //리더인지 확인
         if (!target.getLeaderId().equals(userId)) throw new CustomException(CommonCode.NO_PERMISSION);
@@ -139,11 +147,16 @@ public class MeetUpService {
         List<String> pendingList = target.getPendingId();
 
         query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
-        memberList.add(userId);
-        pendingList.remove(userId);
+
+        memberList.removeIf(s -> s.equals(dto.getMemberId()));
+        pendingList.removeIf(s -> s.equals(dto.getMemberId()));
+
         update.set("memberId", memberList);
         update.set("pendingId", pendingList);
+        return updateMember(query, update);
+    }
 
+    private MeetUp updateMember(Query query, Update update) {
         // 수정 후 결과를 리턴해주도록 옵션 설정
         FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
         MeetUp meetUp = mongoTemplate.findAndModify(query, update, findAndModifyOptions, MeetUp.class);

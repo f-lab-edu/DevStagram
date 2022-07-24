@@ -90,4 +90,10 @@ public class MeetUpController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
     }
 
+    @PostMapping("/leave")
+    public CommonResponse removeMember(@RequestHeader("userId") String userId, @RequestBody AcceptMemberDto dto) {
+        MeetUp meetUp = meetUpService.removeMember(userId, dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
+    }
+
 }

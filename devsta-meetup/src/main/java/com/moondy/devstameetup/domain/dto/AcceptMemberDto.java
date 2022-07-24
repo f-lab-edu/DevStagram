@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinMeetUpDto {
+public class AcceptMemberDto {
     private String meetUpId;
+    private String memberId;
 }
