@@ -9,11 +9,20 @@ import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.service.MeetUpService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @AllArgsConstructor
@@ -23,6 +32,8 @@ public class MeetUpController {
     private final MeetUpService meetUpService;
     private static final String RESULT = "result";
     private static final String CATEGORY_ALL = "ALL";
+
+
 
     @PostMapping("/create")
     public CommonResponse createMeetup(@RequestHeader("userId") String userId, @RequestBody @Valid CreateMeetUpDto meetUpDto) throws CustomException{
@@ -38,28 +49,51 @@ public class MeetUpController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, categoryList));
     }
     @GetMapping("/getMeetUps")
-    public CommonResponse getMeetUps(@RequestParam int fromPage, @RequestParam int toPage) {
-        List<MeetUp> meetUpList = meetUpService.getRecentMeetUp(fromPage, toPage);
+    public CommonResponse getMeetUps(@RequestParam int page, @RequestParam int size) {
+        Page<MeetUp> meetUpList = meetUpService.getRecentMeetUp(page, size);
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+//        PagedModel<MeetUpSummaryDto> result = pagedResourcesAssembler.toModel(meetUpList, meetUpSummaryAssembler);
+//        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result));
     }
 
     @GetMapping("/getMeetUpSummaries/{category}")
-    public CommonResponse getMeetSummaries(@PathVariable("category") String category, @RequestParam int fromPage, @RequestParam int toPage) {
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> getMeetSummaries(@PathVariable("category") String category, @RequestParam int page, @RequestParam int size) {
         // FE만 요청할 것이므로 카테고리가 정확하게 들어온다고 가정하고 코드를 작성. READ라 많이 호출될 것이기 때문에 DB 조회 최소화
         // 대문자로 변환
         String categoryUpper = category.toUpperCase();
         List<MeetUpSummaryDto> meetUpList;
         if (categoryUpper.equals(CATEGORY_ALL)) {
-            meetUpList = meetUpService.getRecentMeetUpSummary(fromPage, toPage);
+            meetUpList = meetUpService.getRecentMeetUpSummary(page, size);
         } else {
-            meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(fromPage, toPage, categoryUpper);
+            meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
-        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+        List<EntityModel<MeetUpSummaryDto>> wrappedList = meetUpList.stream().map(dto -> {
+            // Java Stream을 이용하여 각 Employee 객체의 엔티티 모델 생성.
+            EntityModel<MeetUpSummaryDto> entityModel = EntityModel.of(dto);
+            // 각 엔티티 모델마다 "/employees", "/employees/{id}" 링크 추가.
+            entityModel.add(Link.of(String.format("/getOneMeetUp?meetUpId=%s", dto.getId()), "detail"));
+            return entityModel;
+            // 컬렉션으로 반환.
+        }).collect(Collectors.toList());
+        CollectionModel<EntityModel<MeetUpSummaryDto>> result = CollectionModel.of(wrappedList);
+        result.add(Link.of(String.format("/getMeetUpSummaries/%s?page=%d&size=%d", category, page+1, size), "next"));
+
+        // 각 Employee 객체마다 엔티티 모델 생성
+        List<EntityModel<MeetUpSummaryDto>> detail = meetUpList.stream().map(meetUp -> {
+            return EntityModel.of(meetUp,
+                    // 각 엔티티 모델마다 링크 추가.
+                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId())).withSelfRel());
+        }).collect(Collectors.toList());
+
+        // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
+        return CollectionModel.of(detail,
+                linkTo(methodOn(MeetUpController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
     }
 
     @GetMapping("/getMyMeetUp")
-    public CommonResponse getMyMeetUp(@RequestHeader("userId") String userId,@RequestParam int fromPage, @RequestParam int toPage) {
-        List<MeetUpSummaryDto> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, fromPage, toPage);
+    public CommonResponse getMyMeetUp(@RequestHeader("userId") String userId, @RequestParam int page, @RequestParam int size) {
+        //page는 0번부터 시작
+        Page<MeetUpSummaryDto> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
     }
 

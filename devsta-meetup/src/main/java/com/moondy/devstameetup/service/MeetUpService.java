@@ -9,13 +9,16 @@ import com.moondy.devstameetup.repository.MeetUpCategoryRepository;
 import com.moondy.devstameetup.repository.MeetUpRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +33,16 @@ public class MeetUpService {
     private final MeetUpRepository meetUpRepository;
     private final MongoTemplate mongoTemplate;
 
-    public List<MeetUpSummaryDto> getRecentMeetUpSummaryByCategory(int fromPage, int toPage, String category) {
-        Query query = new Query(Criteria.where("category").is(category));
-        List<MeetUp> meetUpList = mongoTemplate.find(query.with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+    public List<MeetUpSummaryDto> getRecentMeetUpSummaryByCategory(int page, int size, String category) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Query query = new Query()
+                .addCriteria(Criteria.where("category").is(category))
+                .with(Sort.by(Sort.Direction.DESC, "id"))
+                .with(pageable)
+                .skip(pageable.getPageSize() * pageable.getPageNumber()) // offset
+                .limit(pageable.getPageSize());
+
+        List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
         return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
    }
 
@@ -47,24 +57,55 @@ public class MeetUpService {
        return meetUpRepository.save(meetUp);
    }
 
-   public List<MeetUp> getRecentMeetUp(int fromPage, int toPage) {
-       return mongoTemplate.find(new Query().with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+   public Page<MeetUp> getRecentMeetUp(int page, int size) {
+       Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+       Query query = new Query()
+               .with(Sort.by(Sort.Direction.DESC, "id"))
+               .with(pageable)
+               .skip(pageable.getPageSize() * pageable.getPageNumber()) // offset
+               .limit(pageable.getPageSize());
+
+
+       List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
+       return PageableExecutionUtils.getPage(
+               meetUpList,
+               pageable,
+               () -> mongoTemplate.count(query.skip(-1).limit(-1),MeetUpSummaryDto.class)
+               // query.skip(-1).limit(-1)의 이유는 현재 쿼리가 페이징 하려고 하는 offset 까지만 보기에 이를 맨 처음부터 끝까지로 set 해줘 정확한 도큐먼트 개수를 구한다.
+       );
+
        //dto로 리턴하고 싶을 때
 //       return meetUpList.stream().map(it -> it.toDto()).collect(Collectors.toList());
    }
 
-    public List<MeetUpSummaryDto> getRecentMeetUpSummary(int fromPage, int toPage) {
-        List<MeetUp> meetUpList = mongoTemplate.find(new Query().with(Sort.by(Sort.Direction.DESC, "id")).with(PageRequest.of(fromPage, toPage)), MeetUp.class);
+    public List<MeetUpSummaryDto> getRecentMeetUpSummary(int page, int size) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Query query = new Query()
+                .with(pageable)
+                .skip(pageable.getPageSize() * pageable.getPageNumber()) // offset
+                .limit(pageable.getPageSize());
+
+        List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
     }
 
-    public List<MeetUpSummaryDto> getRecentMyMeetUpSummary(String userId, int fromPage, int toPage) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("leaderId").is(userId));
-        query.with(Sort.by(Sort.Direction.DESC, "id"));
-        query.with(PageRequest.of(fromPage, toPage));
+
+    public Page<MeetUpSummaryDto> getRecentMyMeetUpSummary(String userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "id"));
+        Query query = new Query()
+                .addCriteria(Criteria.where("leaderId").is(userId))
+                .with(pageable)
+                .skip(pageable.getPageSize() * pageable.getPageNumber()) // offset
+                .limit(pageable.getPageSize());
+
         List<MeetUp> meetUpList = mongoTemplate.find(query, MeetUp.class);
-        return meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList());
+        return PageableExecutionUtils.getPage(
+                meetUpList.stream().map(it -> it.toSummaryDto()).collect(Collectors.toList()),
+                pageable,
+                () -> mongoTemplate.count(query.skip(-1).limit(-1),MeetUpSummaryDto.class)
+                // query.skip(-1).limit(-1)의 이유는 현재 쿼리가 페이징 하려고 하는 offset 까지만 보기에 이를 맨 처음부터 끝까지로 set 해줘 정확한 도큐먼트 개수를 구한다.
+        );
+
     }
 
     public List<MeetUpSummaryDto> getJoinedMeetUpSummary(String userId, int fromPage, int toPage) {
