@@ -13,12 +13,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -70,7 +67,7 @@ public class DevUserService {
         return mongoTemplate.updateFirst(query, update, DevUser.class);
     }
 
-    public DevUser saveDetail(UserDetailDto userDetailDto) {
+    public DevUser saveUser(UserDetailDto userDetailDto) {
         DevUser newUser = new DevUser();
         newUser.ofDetail(userDetailDto);
         return mongoTemplate.insert(newUser, COLLECTION_NAME);
