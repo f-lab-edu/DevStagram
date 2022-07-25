@@ -18,6 +18,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @RestController
 @Slf4j
@@ -61,7 +64,7 @@ public class MeetUpController {
             meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                Link.of(String.format("%s/getMeetUpSummaries/%s?page=%s&size=%s", GATEWAY_URL, category, page + 1, size), "next"));
+                linkTo(methodOn(MeetUpController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
     }
 
     @GetMapping("/getMyMeetUp")
@@ -69,14 +72,14 @@ public class MeetUpController {
         //page는 0번부터 시작
         List<MeetUp> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                Link.of(String.format("%s/getMyMeetUp?page=%s&size=%s", GATEWAY_URL, page + 1, size), "next"));
+                linkTo(methodOn(MeetUpController.class).getMyMeetUp(userId, page + 1, size)).withRel("next"));
     }
 
     @GetMapping("/getJoinedMeetUp")
     public CollectionModel<EntityModel<MeetUpSummaryDto>> getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int page, @RequestParam int size) {
         List<MeetUp> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                Link.of(String.format("%s/getMyMeetUp?page=%s&size=%s", GATEWAY_URL, page + 1, size), "next"));
+                linkTo(methodOn(MeetUpController.class).getJoinedMeetUp(userId, page +1, size)).withRel("next"));
     }
 
     @GetMapping("/getOneMeetUp")
