@@ -21,6 +21,7 @@ public class MeetUpDto {
     private String contents;
     private Integer maxPeople;
     private List<String> memberId;
+    private List<String> pendingId;
     private Boolean isOpenYn;
     private Boolean isRecruiting;
     private String leaderId;
