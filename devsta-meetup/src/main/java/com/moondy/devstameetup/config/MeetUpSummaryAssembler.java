@@ -1,9 +1,11 @@
 package com.moondy.devstameetup.config;
 
 import com.moondy.devstameetup.controller.MeetUpController;
+import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +23,59 @@ public class MeetUpSummaryAssembler implements RepresentationModelAssembler<Meet
         return EntityModel.of(entity, linkTo(methodOn(MeetUpController.class).getOneMeetUp(entity.getId())).withSelfRel());
     }
 
-    public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollection(List<MeetUpSummaryDto> entityList, String category, int page, int size) {
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollection(List<MeetUp> entityList, Link nextLink) {
         // 각 Employee 객체마다 엔티티 모델 생성
-        List<EntityModel<MeetUpSummaryDto>> detail = entityList.stream().map(meetUp -> {
-            return EntityModel.of(meetUp,
+        List<EntityModel<MeetUpSummaryDto>> detail
+                = entityList.stream().map(meetUp -> {
+            return EntityModel.of(meetUp.toSummaryDto(),
                     // 각 엔티티 모델마다 링크 추가.
-                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId())).withSelfRel());
+                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
+        }).collect(Collectors.toList());
+
+        // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
+        return CollectionModel.of(detail, nextLink);
+    }
+
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollectionCategory(List<MeetUp> entityList, String category, int page, int size) {
+        // 각 Employee 객체마다 엔티티 모델 생성
+        List<EntityModel<MeetUpSummaryDto>> detail
+                = entityList.stream().map(meetUp -> {
+            return EntityModel.of(meetUp.toSummaryDto(),
+                    // 각 엔티티 모델마다 링크 추가.
+                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
         }).collect(Collectors.toList());
 
         // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
         return CollectionModel.of(detail,
                 linkTo(methodOn(MeetUpController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
+    }
+
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollectionMy(List<MeetUp> entityList, String userId, int page, int size) {
+        // 각 Employee 객체마다 엔티티 모델 생성
+        List<EntityModel<MeetUpSummaryDto>> detail
+                = entityList.stream().map(meetUp -> {
+            return EntityModel.of(meetUp.toSummaryDto(),
+                    // 각 엔티티 모델마다 링크 추가.
+                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
+        }).collect(Collectors.toList());
+
+        // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
+        return CollectionModel.of(detail,
+                linkTo(methodOn(MeetUpController.class).getMyMeetUp(userId, page + 1, size)).withRel("next"));
+    }
+
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollectionJoined(List<MeetUp> entityList, String userId, int page, int size) {
+        // 각 Employee 객체마다 엔티티 모델 생성
+        List<EntityModel<MeetUpSummaryDto>> detail
+                = entityList.stream().map(meetUp -> {
+            return EntityModel.of(meetUp.toSummaryDto(),
+                    // 각 엔티티 모델마다 링크 추가.
+                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
+        }).collect(Collectors.toList());
+
+        // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
+        return CollectionModel.of(detail,
+                linkTo(methodOn(MeetUpController.class).getJoinedMeetUp(userId, page + 1, size)).withRel("next"));
     }
 
     //

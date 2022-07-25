@@ -63,26 +63,32 @@ public class MeetUpController {
         // FE만 요청할 것이므로 카테고리가 정확하게 들어온다고 가정하고 코드를 작성. READ라 많이 호출될 것이기 때문에 DB 조회 최소화
         // 대문자로 변환
         String categoryUpper = category.toUpperCase();
-        List<MeetUpSummaryDto> meetUpList;
+        List<MeetUp> meetUpList;
         if (categoryUpper.equals(CATEGORY_ALL)) {
             meetUpList = meetUpService.getRecentMeetUpSummary(page, size);
         } else {
             meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
-        return meetUpSummaryAssembler.toCollection(meetUpList, category, page, size);
+        return meetUpSummaryAssembler.toCollection(meetUpList,
+                linkTo(methodOn(MeetUpController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
+//        return meetUpSummaryAssembler.toCollectionCategory(meetUpList, category, page, size);
     }
 
     @GetMapping("/getMyMeetUp")
-    public CommonResponse getMyMeetUp(@RequestHeader("userId") String userId, @RequestParam int page, @RequestParam int size) {
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> getMyMeetUp(@RequestHeader("userId") String userId, @RequestParam int page, @RequestParam int size) {
         //page는 0번부터 시작
-        Page<MeetUpSummaryDto> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
-        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+        List<MeetUp> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
+        return meetUpSummaryAssembler.toCollection(meetUpList,
+                linkTo(methodOn(MeetUpController.class).getMyMeetUp(userId, page + 1, size)).withRel("next"));
+//        return meetUpSummaryAssembler.toCollectionMy(meetUpList, userId, page, size);
     }
 
     @GetMapping("/getJoinedMeetUp")
-    public CommonResponse getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int fromPage, @RequestParam int toPage) {
-        List<MeetUpSummaryDto> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, fromPage, toPage);
-        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+    public CollectionModel<EntityModel<MeetUpSummaryDto>> getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int page, @RequestParam int size) {
+        List<MeetUp> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, page, size);
+        return meetUpSummaryAssembler.toCollection(meetUpList,
+                linkTo(methodOn(MeetUpController.class).getJoinedMeetUp(userId, page +1, size)).withRel("next"));
+//        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
     }
 
     @GetMapping("/getOneMeetUp")
