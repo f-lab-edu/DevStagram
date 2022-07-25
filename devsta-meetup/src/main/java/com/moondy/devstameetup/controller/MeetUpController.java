@@ -8,25 +8,18 @@ import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.document.MeetUpCategory;
 import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.service.MeetUpService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@AllArgsConstructor
 @Slf4j
 @RequestMapping("/meetup")
 public class MeetUpController {
@@ -34,8 +27,13 @@ public class MeetUpController {
     private static final String RESULT = "result";
     private static final String CATEGORY_ALL = "ALL";
     private final MeetUpSummaryAssembler meetUpSummaryAssembler;
+    @Value("${url.gateway}")
+    private String GATEWAY_URL = "";
 
-
+    public MeetUpController(MeetUpService meetUpService, MeetUpSummaryAssembler meetUpSummaryAssembler) {
+        this.meetUpService = meetUpService;
+        this.meetUpSummaryAssembler = meetUpSummaryAssembler;
+    }
 
     @PostMapping("/create")
     public CommonResponse createMeetup(@RequestHeader("userId") String userId, @RequestBody @Valid CreateMeetUpDto meetUpDto) throws CustomException{
@@ -50,13 +48,6 @@ public class MeetUpController {
         List<MeetUpCategory> categoryList = meetUpService.getCategory();
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, categoryList));
     }
-//    @GetMapping("/getMeetUps")
-//    public CommonResponse getMeetUps(@RequestParam int page, @RequestParam int size) {
-//        Page<MeetUp> meetUpList = meetUpService.getRecentMeetUp(page, size);
-//        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
-////        PagedModel<MeetUpSummaryDto> result = pagedResourcesAssembler.toModel(meetUpList, meetUpSummaryAssembler);
-////        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, result));
-//    }
 
     @GetMapping("/getMeetUpSummaries/{category}")
     public CollectionModel<EntityModel<MeetUpSummaryDto>> getMeetSummaries(@PathVariable("category") String category, @RequestParam int page, @RequestParam int size) {
@@ -70,8 +61,7 @@ public class MeetUpController {
             meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
-//        return meetUpSummaryAssembler.toCollectionCategory(meetUpList, category, page, size);
+                Link.of(String.format("%s/getMeetUpSummaries/%s?page=%s&size=%s", GATEWAY_URL, category, page + 1, size), "next"));
     }
 
     @GetMapping("/getMyMeetUp")
@@ -79,16 +69,14 @@ public class MeetUpController {
         //page는 0번부터 시작
         List<MeetUp> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpController.class).getMyMeetUp(userId, page + 1, size)).withRel("next"));
-//        return meetUpSummaryAssembler.toCollectionMy(meetUpList, userId, page, size);
+                Link.of(String.format("%s/getMyMeetUp?page=%s&size=%s", GATEWAY_URL, page + 1, size), "next"));
     }
 
     @GetMapping("/getJoinedMeetUp")
     public CollectionModel<EntityModel<MeetUpSummaryDto>> getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int page, @RequestParam int size) {
         List<MeetUp> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpController.class).getJoinedMeetUp(userId, page +1, size)).withRel("next"));
-//        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUpList));
+                Link.of(String.format("%s/getMyMeetUp?page=%s&size=%s", GATEWAY_URL, page + 1, size), "next"));
     }
 
     @GetMapping("/getOneMeetUp")

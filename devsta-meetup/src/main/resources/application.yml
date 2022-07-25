@@ -1,5 +1,6 @@
 server:
   port: 9092
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -9,3 +10,5 @@ spring:
     include: db
   config:
     import: "optional:configserver:"
+url:
+  gateway: "http://localhost:8888"
