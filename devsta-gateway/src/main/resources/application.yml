@@ -1,6 +1,7 @@
 uri:
   user-service: "http://localhost:9090"
   post-service: "http://localhost:9091"
+  meetup-service: "http://localhost:9092"
 server:
   port: 9999
 spring:
@@ -50,6 +51,13 @@ spring:
           filters:
             - RewritePath=/api/guest/(?<path>.*),/$\{path}
             - GuestFilter
+        - id: meetup-service
+          uri: ${uri.meetup-service}
+          predicates:
+            - Path=/api/user/meetup/**
+          filters:
+            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - UserJwtFilter
 jwt:
   secret: moondysmellwebapplicationsecret
   expiration-second: 172800  #48시간

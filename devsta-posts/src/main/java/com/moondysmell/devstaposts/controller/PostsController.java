@@ -1,6 +1,7 @@
 package com.moondysmell.devstaposts.controller;
 
 
+import com.moondysmell.devstaposts.config.PostsAssembler;
 import com.moondysmell.devstaposts.domain.document.Posts;
 import com.moondysmell.devstaposts.domain.dto.PostsSaveRequestDto;
 import com.moondysmell.devstaposts.exception.CommonCode;
@@ -10,22 +11,30 @@ import com.moondysmell.devstaposts.service.PostsService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
 
+    private final PostsAssembler postsAssembler;
     private final PostsService postsService;
 
-    public PostsController(PostsService postsService) {
+    public PostsController(PostsService postsService, PostsAssembler postsAssembler) {
         this.postsService = postsService;
+        this.postsAssembler = postsAssembler;
     }
 
 
@@ -33,7 +42,7 @@ public class PostsController {
     @PostMapping("/create")
     public CommonResponse save(@RequestBody PostsSaveRequestDto postsSaveRequestDto, @RequestHeader String userId){
         // 유저 세션이 없을때 예외처리 (추후)
-//            throw new 로그인한 유저의 정보가 없습니다.
+        // throw new 로그인한 유저의 정보가 없습니다.
 
         try{
             String contents = postsSaveRequestDto.getContents();
@@ -50,11 +59,13 @@ public class PostsController {
 
     //모든 피드 조회(타임라인) - 최신순
     @GetMapping("/timeline")
-    public CommonResponse viewAll(){
+    public CollectionModel<EntityModel<Posts>> viewAll(@RequestParam int page, @RequestParam int size){
 
         try{
-            List<Posts> posts = postsService.viewAll();
-            return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
+            List<Posts> posts = postsService.viewAll(page, size);
+
+            return postsAssembler.toCollection(posts,linkTo(methodOn(PostsController.class).viewAll(page + 1, size)).withRel("next"));
+            //return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
         }catch (Exception e){
             log.error(">>>" + e.getMessage());
             throw new CustomException(CommonCode.FAIL);
@@ -64,12 +75,24 @@ public class PostsController {
 
     //내 피드만 조회(프로필)
     @GetMapping("/myFeed")
-    public CommonResponse<List<Posts>> viewMyFeed(@RequestHeader("userId") String userId){
+    public CollectionModel<EntityModel<Posts>> viewMyFeed(@RequestHeader("userId") String userId, @RequestParam int page, @RequestParam int size){
 
         try{
-            List<Posts> posts = postsService.findAllById(userId);
-            //if(posts.isEmpty()) throw new CustomException(CommonCode.NOTHING_IN_MY_FEED);
-            return new CommonResponse(CommonCode.SUCCESS, Map.of("myFeedList", posts));
+            List<Posts> posts = postsService.findAllById(userId, page, size);
+            return postsAssembler.toCollection(posts,linkTo(methodOn(PostsController.class).viewMyFeed(userId, page + 1, size)).withRel("next"));
+        }catch (Exception e){
+            log.error(">>>" + e.getMessage());
+            throw new CustomException(CommonCode.FAIL);
+        }
+
+    }
+
+    @GetMapping("/getOneFeed")
+    public CommonResponse getOneFeed(@RequestParam String id){
+
+        try{
+            Posts posts = postsService.getOneFeed(id);
+            return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
         }catch (Exception e){
             log.error(">>>" + e.getMessage());
             throw new CustomException(CommonCode.FAIL);

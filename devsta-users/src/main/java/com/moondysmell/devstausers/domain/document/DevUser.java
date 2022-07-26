@@ -22,8 +22,8 @@ import java.util.List;
 @ToString(exclude = "password")
 public class DevUser {
 
-    @Transient
-    public static final String SEQUENCE_NAME = "devuser_sequence";
+//    @Transient
+//    public static final String SEQUENCE_NAME = "devuser_sequence";
 
     @Id
     @Field("_id")

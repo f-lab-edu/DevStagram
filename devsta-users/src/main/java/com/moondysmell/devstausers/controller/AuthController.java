@@ -12,11 +12,9 @@ import com.moondysmell.devstausers.domain.dto.UserSummaryDto;
 import com.moondysmell.devstausers.service.DevUserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -51,12 +49,12 @@ public class AuthController {
     @PostMapping("/signUp")
     public CommonResponse signUp(@RequestBody UserDetailDto userDetailDto) {
         if (devUserService.findAllUserByEmail(userDetailDto.getEmail()).size() > 0) throw new CustomException(CommonCode.USER_ALREADY_EXIST);
-        if (devUserService.findAllUserByNickname(userDetailDto.getNickname()).size() >0) throw new CustomException(CommonCode.NICKNAME_ALREADY_EXIT);
+        if (devUserService.findAllUserByNickname(userDetailDto.getNickname()).size() >0) throw new CustomException(CommonCode.NICKNAME_ALREADY_EXIST);
         if (userDetailDto.getPictureUrl() == null) {
             userDetailDto.setPictureUrl(DEFAULT_PICTURE_URL);
         }
         try {
-            DevUser savedUser = devUserService.saveDetail(userDetailDto);
+            DevUser savedUser = devUserService.saveUser(userDetailDto);
             if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
             return new CommonResponse(CommonCode.FAIL);
 

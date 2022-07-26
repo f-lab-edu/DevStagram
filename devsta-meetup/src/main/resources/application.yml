@@ -6,5 +6,6 @@ spring:
     name: meetupservice
   profiles:
     active: default
+    include: db
   config:
-    import: "configserver:http://localhost:8888"
+    import: "optional:configserver:"

@@ -10,6 +10,7 @@ import com.moondysmell.devstaposts.repository.CommentRepository;
 import com.moondysmell.devstaposts.repository.PostsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -61,21 +62,23 @@ public class CommentService {
         else if(comments.getContents().equals(commentDto.getContents())) throw new CustomException(CommonCode.COMMENT_NO_CHANGE); //변경사항이 없을때 예외처리
         else if (!comments.getCommentUser().equals(userId)) throw new CustomException(CommonCode.NOT_MATCH_WRITER); //작성한자와 수정하려는자가 동일하지 않을떄 예외처리
         else {
-            Query query = new Query(Criteria.where("id").is(commentId)
-                    .andOperator(Criteria.where("commentUser").is(userId)));
+            Query query = new Query(Criteria.where("id").is(commentId));
+
             Update update = new Update();
             update.set("contents", commentDto.getContents());
             update.set("updateDt", LocalDateTime.now());
 
-            //UpdateResult updateResult
+            FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true); //결과값 보기 옵션
+
             comments = mongoTemplate.findAndModify(
                     query,
                     update,
+                    options,
                     Comments.class);
 
-            //return comments;
+            if (comments == null) throw new CustomException(CommonCode.COMMENT_UPDATE_FAIL);
         }
-        return mongoTemplate.findOne(new Query(Criteria.where("id").is(commentId)), Comments.class);
+        return comments;
     }
 
     public boolean deleteComment(Long commentId, String userId){
