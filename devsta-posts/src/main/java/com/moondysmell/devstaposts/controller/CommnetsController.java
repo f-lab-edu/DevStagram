@@ -29,23 +29,24 @@ public class CommnetsController {
 
     @PostMapping("/create")
     public CommonResponse createComment(@RequestBody @Valid CommentDto commentDto, @RequestHeader String userId) {
-//        try {
+
         String contents = commentDto.getContents();
+
         if (contents.isEmpty()) throw new CustomException(CommonCode.CONTENT_IS_MANDATORY);
         Comments comments = commentService.createComment(commentDto, userId);
+
         return new CommonResponse(CommonCode.SUCCESS, Map.of("createComment", comments));
 
-//        } catch (Exception e) {
-//            log.error(">>>" + e.getMessage());
-//            throw new CustomException(CommonCode.FAIL);
-//        }
     }
 
     @GetMapping("/list/{postId}")
     public CommonResponse<List<Comments>> viewCommentsList(@PathVariable("postId") Long postId) {
         if (postId == null) throw new CustomException(CommonCode.NOT_FOUNT_CONTENTS);
         List<Comments> comments = commentService.getComments(postId);
-        return new CommonResponse<>(CommonCode.SUCCESS, Map.of("CommentsList", comments));
+        HashMap attribute = new HashMap();
+        attribute.put("commentCount", comments.size());
+        attribute.put("CommentsList", comments);
+        return new CommonResponse<>(CommonCode.SUCCESS, attribute);
 
     }
 
@@ -70,7 +71,7 @@ public class CommnetsController {
 
         HashMap attribute = new HashMap();
         attribute.put("postId", postId);
-        //attribute.put("deleteCommentId", commentId);
+        attribute.put("deleteCommentId", commentId);
         return new CommonResponse(CommonCode.SUCCESS, attribute);
 
 

@@ -9,12 +9,15 @@ import com.moondysmell.devstaposts.exception.CustomException;
 import com.moondysmell.devstaposts.repository.PostsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,15 +59,34 @@ public class PostsService {
 //    }
 
     //타임라인 - 전체조회(최신순)
-    public List<Posts> viewAll() {
-        return postsRepository.findAll(Sort.by(Sort.Direction.DESC, "createDt"));
+    public List<Posts> viewAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDt"));
+        Query query = new Query()
+                .with(pageable)
+                .skip(pageable.getPageSize() * pageable.getPageNumber()) // offset
+                .limit(pageable.getPageSize());
+
+
+        return mongoTemplate.find(query, Posts.class);
+        //return postsRepository.findAll();
     }
 
     //내가 작성한 피트들만 조회
-    public List<Posts> findAllById(String userId) {
-        Query query = new Query(Criteria.where("userId").is(userId)).with(Sort.by(Sort.Direction.DESC, "createDt"));
-        List<Posts> posts = mongoTemplate.find(query, Posts.class);
-        return posts;
+    //Pagenation적용
+    public List<Posts> findAllById(String userId, int page, int size) {
+        //Query query = new Query(Criteria.where("userId").is(userId)).with(Sort.by(Sort.Direction.DESC, "createDt"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDt"));
+        Query query = new Query(Criteria.where("userId").is(userId))
+                .with(pageable)
+                .skip(pageable.getPageSize() * pageable.getPageNumber())
+                .limit(pageable.getPageSize());
+
+        return mongoTemplate.find(query, Posts.class);
+    }
+
+    //피드 하나만 조회
+    public Posts getOneFeed(String id) {
+        return postsRepository.findById(id).orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
     }
 
     //게시글 update
@@ -75,16 +97,18 @@ public class PostsService {
         Posts posts = postById.get();
         if (!posts.getUserId().equals(userId)) throw new CustomException(CommonCode.NOT_MATCH_WRITER);
 
-        Query query = new Query(Criteria.where("id").is(postId).andOperator(Criteria.where("userId").is(userId)));
+        Query query = new Query(Criteria.where("id").is(postId));
         Update update = new Update();
         update.set("contents", newPosts.getContents());
         update.set("pictureUrl", newPosts.getPictureUrl());
         update.set("updateDt", LocalDateTime.now());
 
-        posts = mongoTemplate.findAndModify(query, update, Posts.class);
+       FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true); //결과값 보기 옵션
+        posts = mongoTemplate.findAndModify(query, update, options, Posts.class);
+        if (posts == null) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
 
-        //if (updateResult.getModifiedCount() == 0) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
-        return mongoTemplate.findOne(new Query(Criteria.where("id").is(postId)), Posts.class);
+        return mongoTemplate.findAndModify(query, update, options, Posts.class);
+
     }
 
 
