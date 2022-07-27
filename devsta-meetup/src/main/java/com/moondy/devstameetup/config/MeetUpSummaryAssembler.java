@@ -19,9 +19,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class MeetUpSummaryAssembler implements RepresentationModelAssembler<MeetUpSummaryDto, EntityModel<MeetUpSummaryDto>> {
 
-    @Value("${url.gateway}")
-    private String GATEWAY_URL = "";
-
     @Override
     public EntityModel<MeetUpSummaryDto> toModel(MeetUpSummaryDto entity) {
         return EntityModel.of(entity, linkTo(methodOn(MeetUpController.class).getOneMeetUp(entity.getId())).withSelfRel());

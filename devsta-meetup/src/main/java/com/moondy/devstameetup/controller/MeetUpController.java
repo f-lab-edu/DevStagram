@@ -30,8 +30,7 @@ public class MeetUpController {
     private static final String RESULT = "result";
     private static final String CATEGORY_ALL = "ALL";
     private final MeetUpSummaryAssembler meetUpSummaryAssembler;
-    @Value("${url.gateway}")
-    private String GATEWAY_URL = "";
+
 
     public MeetUpController(MeetUpService meetUpService, MeetUpSummaryAssembler meetUpSummaryAssembler) {
         this.meetUpService = meetUpService;
