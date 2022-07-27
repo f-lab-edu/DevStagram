@@ -3,6 +3,7 @@ package com.moondysmell.devstaposts.domain.dto;
 import com.moondysmell.devstaposts.domain.document.Posts;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -11,23 +12,8 @@ import java.util.Date;
 @Builder
 public class PostsSaveRequestDto {
 
+    @NotBlank(message = "내용을 작성해주세요.")
     private String contents;
     private String pictureUrl;
-
-
-//
-////    public Posts convertPosts(User user){
-////        return Posts.builder()
-////                .user(user)
-////                .contents(this.contents)
-////                .build();
-////    }
-
-    public Posts toEntity(){
-        return Posts.builder()
-                .contents(contents)
-                .pictureUrl(pictureUrl)
-                .build();
-    }
 
 }
