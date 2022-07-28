@@ -2,7 +2,7 @@ server:
   port: 9090
 spring:
   profiles:
-    include: rabbitmq
+    include: db, rabbitmq
   application:
     name: userservice
 #  data:

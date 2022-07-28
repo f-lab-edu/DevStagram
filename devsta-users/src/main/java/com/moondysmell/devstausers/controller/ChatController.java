@@ -5,8 +5,10 @@ import com.moondysmell.devstausers.common.CommonResponse;
 import com.moondysmell.devstausers.domain.document.ChatMessage;
 
 import com.moondysmell.devstausers.domain.document.ChatRoom;
+import com.moondysmell.devstausers.domain.dto.ChatMessageDto;
 import com.moondysmell.devstausers.service.ChatService;
 import lombok.AllArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/chat")
 public class ChatController {
 
@@ -37,10 +39,8 @@ public class ChatController {
 
 
     //채팅방 생성
-    @PostMapping
+    @PostMapping("/createRoom")
     public CommonResponse createRoom(@RequestHeader("receiver") String receiver, @RequestHeader("userId") String sender) {
-
-
         ChatRoom chatRoom = chatService.createRoom(receiver, sender);
 
         return new CommonResponse(CommonCode.SUCCESS, Map.of("chatRoom", chatRoom));
@@ -48,14 +48,21 @@ public class ChatController {
     
 
     //채팅방 
-    @GetMapping("/room")
-    public String getMessages(String chatRoomId){
+    @GetMapping("/room/{chatRoomId}")
+    public CommonResponse getMessages(@PathVariable ObjectId chatRoomId){
 
         //ChatMessage chatMessage = new ChatMessage();
 //        model.addAttribute("chatRoomId",chatRoomId);
 //        model.addAttribute("nickname", nickname);
         List<ChatMessage> messages = chatService.getMessagesByUser(chatRoomId);
 
-        return "chat/room";
+        return new CommonResponse(CommonCode.SUCCESS, Map.of("messages", messages));
+    }
+
+    @PostMapping("/message")
+    public CommonResponse sendMessage(@RequestBody ChatMessageDto chatMessageDto){
+
+        ChatMessage chatMessage = chatService.saveMessage(chatMessageDto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of("chatMessage", chatMessage));
     }
 }

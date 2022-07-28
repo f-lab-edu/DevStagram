@@ -1,5 +1,6 @@
 package com.moondysmell.devstausers.domain.document;
 
+import com.moondysmell.devstausers.domain.dto.ChatMessageDto;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -34,5 +35,15 @@ public class ChatMessage implements Serializable {
 
     @Field("create_dt")
     private LocalDateTime createDt;
+
+//    public ChatMessageDto toDto(){
+//        return ChatMessageDto.builder()
+//                .roomId(this.roomId.toString())
+//                .sender(this.sender)
+//                .receiver(this.receiver)
+//                .message(this.message)
+//                .createDt(this.createDt)
+//                .build();
+//    }
 
 }
