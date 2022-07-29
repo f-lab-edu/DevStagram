@@ -22,42 +22,36 @@ spring:
               - PUT
               - GET
               - POST
+              - DELETE
       routes:
         - id: user-service
           uri: ${uri.user-service}
           predicates:
             - Path=/api/user/profile/**
           filters:
-            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - RewritePath=/api/user/profile/(?<path>.*),/$\{path}
             - UserJwtFilter
-        - id: guest-user-service
-          uri: ${uri.user-service}
-          predicates:
-            - Path=/api/guest/profile/**
-          filters:
-            - RewritePath=/api/guest/(?<path>.*),/$\{path}
-            - GuestFilter
         - id: post-service
           uri: ${uri.post-service}
           predicates:
-            - Path=/api/user/posts/**
+            - Path=/api/posts/**
           filters:
-            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - RewritePath=/api/(?<path>.*),/$\{path}
             - UserJwtFilter
-        - id: guest-post-service
-          uri: ${uri.post-service}
-          predicates:
-            - Path=/api/guest/posts/**
-          filters:
-            - RewritePath=/api/guest/(?<path>.*),/$\{path}
-            - GuestFilter
         - id: meetup-service
           uri: ${uri.meetup-service}
           predicates:
-            - Path=/api/user/meetup/**
+            - Path=/api/meetup/service/**
           filters:
-            - RewritePath=/api/user/(?<path>.*),/$\{path}
+            - RewritePath=/api/meetup/(?<path>.*),/$\{path}
             - UserJwtFilter
+        - id: meetup-read
+          uri: ${uri.meetup-service}
+          predicates:
+            - Path=/api/meetup/read/**
+          filters:
+            - RewritePath=/api/meetup/(?<path>.*),/$\{path}
+
 jwt:
   secret: moondysmellwebapplicationsecret
   expiration-second: 172800  #48시간
