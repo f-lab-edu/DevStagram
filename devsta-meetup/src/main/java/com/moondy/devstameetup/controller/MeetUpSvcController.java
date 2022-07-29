@@ -22,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @Slf4j
-@RequestMapping("/meetup/service")
+@RequestMapping("/service")
 public class MeetUpSvcController {
     private final MeetUpService meetUpService;
     private static final String RESULT = "result";
