@@ -58,5 +58,8 @@ jwt:
 #  expiration-second: 259200  #72시간
 #  expiration-second: 10  #10초
 
-
+#### cloud 용
+#  user-service: http://198.19.142.213:9090
+#  post-service: http://198.19.239.141:9091
+#  meetup-service: http://198.19.196.12:9092
 
