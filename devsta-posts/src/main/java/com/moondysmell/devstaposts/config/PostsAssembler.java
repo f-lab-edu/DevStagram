@@ -2,7 +2,6 @@ package com.moondysmell.devstaposts.config;
 
 import com.moondysmell.devstaposts.controller.PostsController;
 import com.moondysmell.devstaposts.domain.document.Posts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -12,13 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Component
 public class PostsAssembler implements RepresentationModelAssembler<Posts, EntityModel<Posts>> {
-    //@Value("${url.gateway}")
-    private String GATEWAY_URL = "";
+
 
     @Override
     public EntityModel<Posts> toModel(Posts entity) {

@@ -1,6 +1,7 @@
 package com.moondysmell.devstaposts.domain.document;
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.*;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -53,7 +54,12 @@ public class Posts{
     private LocalDateTime updateDt;
 
 
-    public String getId() {
-        return id + "";
+//    public String getId(ObjectId id) {
+//        return id.toString();
+//    }
+
+    public Long getId() {
+        return id;
     }
+
 }
