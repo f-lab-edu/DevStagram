@@ -15,7 +15,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 @RestController
 @Slf4j
-@RequestMapping("/profile")
+//@RequestMapping("/profile")
 public class UserController {
     private final DevUserService devUserService;
 

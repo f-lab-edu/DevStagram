@@ -1,9 +1,9 @@
 package com.moondy.devstameetup.config;
 
-import com.moondy.devstameetup.controller.MeetUpController;
+import com.moondy.devstameetup.controller.MeetUpReadController;
+import com.moondy.devstameetup.controller.MeetUpSvcController;
 import com.moondy.devstameetup.domain.document.MeetUp;
 import com.moondy.devstameetup.domain.dto.MeetUpSummaryDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -19,12 +19,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class MeetUpSummaryAssembler implements RepresentationModelAssembler<MeetUpSummaryDto, EntityModel<MeetUpSummaryDto>> {
 
-    @Value("${url.gateway}")
-    private String GATEWAY_URL = "";
-
     @Override
     public EntityModel<MeetUpSummaryDto> toModel(MeetUpSummaryDto entity) {
-        return EntityModel.of(entity, linkTo(methodOn(MeetUpController.class).getOneMeetUp(entity.getId())).withSelfRel());
+        return EntityModel.of(entity, linkTo(methodOn(MeetUpReadController.class).getOneMeetUp(entity.getId())).withSelfRel());
     }
 
     public CollectionModel<EntityModel<MeetUpSummaryDto>> toCollection(List<MeetUp> entityList, Link nextLink) {
@@ -33,7 +30,7 @@ public class MeetUpSummaryAssembler implements RepresentationModelAssembler<Meet
                 = entityList.stream().map(meetUp -> {
             return EntityModel.of(meetUp.toSummaryDto(),
                     // 각 엔티티 모델마다 링크 추가.
-                    linkTo(methodOn(MeetUpController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
+                    linkTo(methodOn(MeetUpReadController.class).getOneMeetUp(meetUp.getId().toString())).withSelfRel());
         }).collect(Collectors.toList());
 
         // 엔티티 모델들과 별개로 listAll 메서드 링크 추가.
