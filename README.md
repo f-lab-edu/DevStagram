@@ -50,8 +50,7 @@
 
 | URI Rule | 기능 | 토큰 필요 | Gateway 동작 | routing to |
 | --- | --- | --- | --- | --- |
-| Path=/api/auth/** | 로그인, 비밀번호 관련 기능 | N | RestTemplate로 내부통신
-(devsta-user에서 받은 응답으로 JWT 생성 처리) | devsta-users |
+| Path=/api/auth/** | 로그인, 비밀번호 관련 기능 | N | RestTemplate로 내부통신(devsta-user에서 받은 응답으로 JWT 생성 처리) | devsta-users |
 | Path=/api/user/profile/** | 내 프로필 정보, 수정 | Y | AuthFilter에서 토큰 인증 후 라우팅 | devsta-users |
 | Path=/api/posts/** | 포스팅, 타임라인 관련 기능 | Y | AuthFilter에서 토큰 인증 후 라우팅 | devsta-posts |
 | Path=/api/meetup/service/** |  밋업 관련 기능 중 로그인 필요한 기능 | Y | AuthFilter에서 토큰 인증 후 라우팅 | devsta-meetup |
