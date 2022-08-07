@@ -9,8 +9,10 @@ import com.moondy.devstameetup.domain.document.MeetUpCategory;
 import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.service.MeetUpService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +32,8 @@ public class MeetUpReadController {
     private static final String CATEGORY_ALL = "ALL";
     private final MeetUpSummaryAssembler meetUpSummaryAssembler;
 
+    @Value("${url.gateway}")
+    private String GATEWAY_URL = "";
 
     public MeetUpReadController(MeetUpService meetUpService, MeetUpSummaryAssembler meetUpSummaryAssembler) {
         this.meetUpService = meetUpService;
@@ -55,7 +59,7 @@ public class MeetUpReadController {
             meetUpList = meetUpService.getRecentMeetUpSummaryByCategory(page, size, categoryUpper);
         }
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpReadController.class).getMeetSummaries(category, page + 1, size)).withRel("next"));
+                Link.of(String.format("%s/read/getMeetUpSummaries/%s?page=%d&size=%d", GATEWAY_URL, category, page + 1, size), "next"));
     }
 
     @GetMapping("/getOneMeetUp")

@@ -9,3 +9,5 @@ spring:
     include: db
   config:
     import: "optional:configserver:"
+url:
+  gateway: "http://localhost:9999/api/meetup"
