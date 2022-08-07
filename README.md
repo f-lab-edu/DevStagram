@@ -16,25 +16,32 @@
 
 ## 🔖 화면 구성
 
-- `figma`: https://www.figma.com/file/qOrnqo4o5ZJyKmMKjGKCWa/Devstagram-2%EC%B0%A8?node-id=0%3A1
+- `figma`: [피그마 파일 보러가기](https://www.figma.com/file/qOrnqo4o5ZJyKmMKjGKCWa/Devstagram-2%EC%B0%A8?node-id=0%3A1)
+
+![image](https://user-images.githubusercontent.com/56625356/183299638-ce712c13-28ad-473e-9739-7fa575f86412.png) ![image](https://user-images.githubusercontent.com/56625356/183299692-a3317f1a-47ad-4631-ab05-ac3b0a265f79.png) ![image](https://user-images.githubusercontent.com/56625356/183299696-e6455c65-5422-46c6-a103-68d6835d6238.png) ![image](https://user-images.githubusercontent.com/56625356/183299713-bfd796f9-2d59-44e1-8de0-e3f12d6806ce.png) ![image](https://user-images.githubusercontent.com/56625356/183299720-0429cab8-906a-4576-90fe-c59e46ae17b5.png) ![image](https://user-images.githubusercontent.com/56625356/183299727-810feaae-397b-4aef-8ab5-e61f86056065.png)
+
+
 
 ## 🔖 WorkFlow
 
-![Untitled](Devstagram%20README%20a3b5998dc3db4b8588e181b4d02c2a50/Untitled%206.png)
+![image](https://user-images.githubusercontent.com/56625356/183299774-3f6913c0-2708-47d5-b4ac-ca087df4aa54.png)
+
+
 
 ## 🔖 DB 설계 (Mongo DB)
-
-
+![image](https://user-images.githubusercontent.com/56625356/183299783-7b438aa8-50c3-42a7-8f27-2c320b696d49.png)
 
 - 연결 표시되어있는 것은 논리적인 관계를 표시한 것일뿐, 실제로 릴레이션이 설정되어있는 것은 아닙니다.
 
 ## 🔖 아키텍처
 
 - 클라우드 아키텍처
-
+![image](https://user-images.githubusercontent.com/56625356/183299798-ed420935-cae5-406d-ada5-9123c0d66295.png)
 
 
 - 백엔드 아키텍처
+![image](https://user-images.githubusercontent.com/56625356/183299839-28016ff1-78cb-43cb-8465-bcbf2c944fc5.png)
+
 
 
 
@@ -65,7 +72,7 @@
 - Issue 생성 → Issue 번호를 딴 branch 생성
 - 목적에 따라 feat, refact, debug 폴더로 branch 관리
 
-```json
+```
 keyword
 - feat : 새로운 기능이 추가 됨
 - refact : 기능 혹은 성능 개선
