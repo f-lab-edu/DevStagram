@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -16,6 +17,7 @@ public class CommentDto {
 
     private Long postId;
 
+    @NotBlank(message = "내용을 작성해주세요.")
     private String contents;
 
 }

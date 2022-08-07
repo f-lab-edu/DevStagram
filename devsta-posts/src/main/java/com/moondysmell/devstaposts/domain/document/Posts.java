@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Posts implements Persistable<String>{
+public class Posts{
 
     @Transient
     public static final  String SEQUENCE_NAME = "posts_sequence";
@@ -53,13 +53,7 @@ public class Posts implements Persistable<String>{
     private LocalDateTime updateDt;
 
 
-    @Override
     public String getId() {
-        return id+"";
-    }
-
-    @Override
-    public boolean isNew() {
-        return createDt == null;
+        return id + "";
     }
 }

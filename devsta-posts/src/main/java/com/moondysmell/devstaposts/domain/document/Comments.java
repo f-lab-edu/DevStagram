@@ -18,7 +18,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comments implements Persistable<Long> {
+public class Comments {
 
     @Transient
     public static final  String SEQUENCE_NAME = "comments_sequence";
@@ -45,8 +45,5 @@ public class Comments implements Persistable<Long> {
     @LastModifiedDate
     private LocalDateTime updateDt;
 
-    @Override
-    public boolean isNew()  {
-        return createDt == null;
-    }
+
 }
