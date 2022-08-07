@@ -103,6 +103,11 @@ public class MeetUpSvcController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
     }
 
+    @PostMapping("/selfLeave")
+    public CommonResponse removeSelf(@RequestHeader("userId") String userId, @RequestBody JoinMeetUpDto dto) {
+        MeetUp meetUp = meetUpService.removeSelf(userId, dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
+    }
 
 
 }
