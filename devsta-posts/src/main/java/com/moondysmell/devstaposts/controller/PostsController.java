@@ -28,7 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
 @RestController
-@RequestMapping("/posts")
+//@RequestMapping("/posts")
 public class PostsController {
 
     private final PostsAssembler postsAssembler;
