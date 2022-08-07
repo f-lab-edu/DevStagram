@@ -10,9 +10,11 @@ import com.moondysmell.devstaposts.exception.CustomException;
 import com.moondysmell.devstaposts.service.PostsService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,9 @@ public class PostsController {
 
     private final PostsAssembler postsAssembler;
     private final PostsService postsService;
+
+    @Value("${url.gateway}")
+    private String GATEWAY_URL = "";
 
     public PostsController(PostsService postsService, PostsAssembler postsAssembler) {
         this.postsService = postsService;
@@ -63,8 +68,7 @@ public class PostsController {
 
         try{
             List<Posts> posts = postsService.viewAll(page, size);
-
-            return postsAssembler.toCollection(posts,linkTo(methodOn(PostsController.class).viewAll(page + 1, size)).withRel("next"));
+            return postsAssembler.toCollection(posts,Link.of(String.format("%s/timeline?page=%d&size=%d", GATEWAY_URL, page + 1, size), "next"));
             //return new CommonResponse(CommonCode.SUCCESS, Map.of("posts", posts));
         }catch (Exception e){
             log.error(">>>" + e.getMessage());
@@ -79,7 +83,8 @@ public class PostsController {
 
         try{
             List<Posts> posts = postsService.findAllById(userId, page, size);
-            return postsAssembler.toCollection(posts,linkTo(methodOn(PostsController.class).viewMyFeed(userId, page + 1, size)).withRel("next"));
+
+            return postsAssembler.toCollection(posts,Link.of(String.format("%s/myFeed?page=%d&size=%d", GATEWAY_URL, page + 1, size), "next"));
         }catch (Exception e){
             log.error(">>>" + e.getMessage());
             throw new CustomException(CommonCode.FAIL);

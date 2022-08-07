@@ -17,18 +17,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class PostsAssembler implements RepresentationModelAssembler<Posts, EntityModel<Posts>> {
-    //@Value("${url.gateway}")
+    @Value("${url.gateway}")
     private String GATEWAY_URL = "";
 
     @Override
     public EntityModel<Posts> toModel(Posts entity) {
-        return EntityModel.of(entity, linkTo(methodOn(PostsController.class).getOneFeed(entity.getId())).withSelfRel());
+        return EntityModel.of(entity, Link.of(String.format("%s/getOneFeed?id=%s", GATEWAY_URL, entity.getId()), "detail"));
     }
 
     public CollectionModel<EntityModel<Posts>> toCollection(List<Posts> entityList, Link nextLink){
         List<EntityModel<Posts>> detail = entityList.stream().map(posts ->
         { return EntityModel.of(posts,
-                linkTo(methodOn(PostsController.class).getOneFeed(posts.getId())).withSelfRel());
+                Link.of(String.format("%s/getOneFeed?id=%s", GATEWAY_URL, posts.getId()), "detail"));
         }).collect(Collectors.toList());
 
         return CollectionModel.of(detail, nextLink);

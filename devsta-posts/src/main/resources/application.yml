@@ -17,4 +17,5 @@ spring:
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
-  
+url:
+  gateway: "http://localhost:9999/posts"
