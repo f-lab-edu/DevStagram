@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class AuthController {
     private final String DEFAULT_PICTURE_URL = "https://toppng.com//public/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png";
 
     @PostMapping("/signIn")
-    public CommonResponse signIn(@RequestBody LoginDto requestBody) {
+    public CommonResponse signIn(@RequestBody @Valid LoginDto requestBody) {
         DevUser user = devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
         //pasing 하기 쉽게 HashMap 사용(depth 최대한 얕게)
         HashMap<String, String> attribute = new HashMap<>();
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/changePW")
-    public CommonResponse changePW(@RequestBody ChangePwDto requestBody) {
+    public CommonResponse changePW(@RequestBody @Valid ChangePwDto requestBody) {
         devUserService.checkExistUser(requestBody.getEmail(), requestBody.getPassword());
         UpdateResult result = devUserService.updatePw(requestBody);
         if (result.getModifiedCount() == 0 ) {
@@ -47,7 +48,7 @@ public class AuthController {
     }
 
     @PostMapping("/signUp")
-    public CommonResponse signUp(@RequestBody UserDetailDto userDetailDto) {
+    public CommonResponse signUp(@RequestBody @Valid UserDetailDto userDetailDto) {
         if (devUserService.findAllUserByEmail(userDetailDto.getEmail()).size() > 0) throw new CustomException(CommonCode.USER_ALREADY_EXIST);
         if (devUserService.findAllUserByNickname(userDetailDto.getNickname()).size() >0) throw new CustomException(CommonCode.NICKNAME_ALREADY_EXIST);
         if (userDetailDto.getPictureUrl() == null) {

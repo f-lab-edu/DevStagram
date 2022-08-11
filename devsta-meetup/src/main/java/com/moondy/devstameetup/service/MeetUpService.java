@@ -238,6 +238,26 @@ public class MeetUpService {
         return updateMember(query, update);
     }
 
+    public MeetUp removeSelf(String userId, JoinMeetUpDto dto) {
+        MeetUp target = getOneMeetUp(dto.getMeetUpId());
+        // 참여중이거나 대기중인 멤버인지 확인
+        List<String> memberList = target.getMemberId();
+        List<String> pendingList = target.getPendingId();
+        if (!memberList.contains(userId) && !pendingList.contains(userId)) throw new CustomException(CommonCode.NOT_IN_PENDING_LIST);
+
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
+
+        memberList.removeIf(s -> s.equals(userId));
+        pendingList.removeIf(s -> s.equals(userId));
+
+        update.set("memberId", memberList);
+        update.set("pendingId", pendingList);
+        return updateMember(query, update);
+    }
+
     private MeetUp updateMember(Query query, Update update) {
         // 수정 후 결과를 리턴해주도록 옵션 설정
         FindAndModifyOptions findAndModifyOptions = FindAndModifyOptions.options().returnNew(true);
