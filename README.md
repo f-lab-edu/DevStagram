@@ -55,6 +55,7 @@
 | Path=/api/posts/** | 포스팅, 타임라인 관련 기능 | Y | AuthFilter에서 토큰 인증 후 라우팅 | devsta-posts |
 | Path=/api/meetup/service/** |  밋업 관련 기능 중 로그인 필요한 기능 | Y | AuthFilter에서 토큰 인증 후 라우팅 | devsta-meetup |
 | Path=/api/meetup/read/** | 밋업 관련 기능 중 로그인 필요 없는 기능 | N | uri rewrite만 하고 토큰 인증 없이 라우팅 | devsta-meetup |
+> [설명 블로그 바로가기](https://velog.io/@mdy0102/Gateway-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0)
 
 ## ❓MongoDB 사용 이유
 
