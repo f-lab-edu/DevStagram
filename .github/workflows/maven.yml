@@ -22,5 +22,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Build devsta-gateway
+      run: mvn -B package --file devsta-gateway/pom.xml
+    - name: Build devsta-meetup
+      run: mvn -B package --file devsta-meetup/pom.xml
+    - name: Build devsta-posts
+      run: mvn -B package --file devsta-posts/pom.xml
+    - name: Build devsta-users
+      run: mvn -B package --file devsta-users/pom.xml
