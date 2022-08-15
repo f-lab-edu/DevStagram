@@ -76,7 +76,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub OWNER Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/f-lab-edu/DevStagram</url>
+			<url>https://maven.pkg.github.com/f-lab-edu/DevStagram/devsta-gateway</url>
 		</repository>
 	</distributionManagement>
 
