@@ -22,6 +22,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+    
+    - name: Clean Mvn
+      run: mvn clean
         
     - name: Build devsta-gateway
       run: mvn deploy -s devsta-gateway/maven-settings.xml -B package --file devsta-gateway/pom.xml
