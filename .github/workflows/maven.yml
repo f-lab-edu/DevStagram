@@ -22,8 +22,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-        server-id: github 
-        settings-path: ${{ secrets.workspace }} 
         
     - name: Build devsta-gateway
       run: mvn -B package --file devsta-gateway/pom.xml
@@ -32,8 +30,7 @@ jobs:
     - name: Build devsta-posts
       run: mvn -B package --file devsta-posts/pom.xml
     - name: Build devsta-users
-      run: mvn -B package --file devsta-users/pom.xml
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy
+      run: mvn -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.token }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
