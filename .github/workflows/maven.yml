@@ -23,21 +23,19 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
-    - name: Clean Mvn
-      run: mvn clean
         
     - name: Build devsta-gateway
-      run: mvn deploy -s devsta-gateway/maven-settings.xml -B package --file devsta-gateway/pom.xml
+      run: mvn deploy -s devsta-gateway/maven-setting.xml -B package --file devsta-gateway/pom.xml
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
         ACCESS_TOKEN: ${{ secrets.TOKEN }}
     - name: Build devsta-meetup
-      run: mvn deploy -s devsta-meetup/maven-settings.xml -B package --file devsta-meetup/pom.xml
+      run: mvn deploy -s devsta-meetup/maven-setting.xml -B package --file devsta-meetup/pom.xml
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
         ACCESS_TOKEN: ${{ secrets.TOKEN }}
     - name: Build devsta-posts
-      run: mvn deploy -s devsta-posts/maven-settings.xml -B package --file devsta-posts/pom.xml
+      run: mvn deploy -s devsta-posts/maven-setting.xml -B package --file devsta-posts/pom.xml
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
         ACCESS_TOKEN: ${{ secrets.TOKEN }}
