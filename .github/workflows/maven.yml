@@ -24,11 +24,20 @@ jobs:
         cache: maven
         
     - name: Build devsta-gateway
-      run: mvn -B package --file devsta-gateway/pom.xml
+      run: mvn deploy -s devsta-gateway/maven-settings.xml -B package --file devsta-gateway/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
     - name: Build devsta-meetup
-      run: mvn -B package --file devsta-meetup/pom.xml
+      run: mvn deploy -s devsta-meetup/maven-settings.xml -B package --file devsta-meetup/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
     - name: Build devsta-posts
-      run: mvn -B package --file devsta-posts/pom.xml
+      run: mvn deploy -s devsta-posts/maven-settings.xml -B package --file devsta-posts/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
     - name: Build devsta-users
       run: mvn deploy -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
       env:
