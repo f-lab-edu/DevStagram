@@ -27,13 +27,13 @@ jobs:
         
     - name: Build devsta-gateway
       run: mvn -B package --file devsta-gateway/pom.xml
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/devsta-gateway/settings.xml
-      env:
-        GITHUB_TOKEN: ${{ secrets.token }}
     - name: Build devsta-meetup
       run: mvn -B package --file devsta-meetup/pom.xml
     - name: Build devsta-posts
       run: mvn -B package --file devsta-posts/pom.xml
     - name: Build devsta-users
       run: mvn -B package --file devsta-users/pom.xml
+    - name: Publish to GitHub Packages Apache Maven
+      run: mvn deploy -s $GITHUB_WORKSPACE/devsta-users/settings.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.token }}
