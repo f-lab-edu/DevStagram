@@ -30,7 +30,7 @@ jobs:
     - name: Build devsta-posts
       run: mvn -B package --file devsta-posts/pom.xml
     - name: Build devsta-users
-      run: mvn -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
+      run: mvn deploy -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
       env:
         USER_NAME: ${{ secrets.USER_NAME }}
         ACCESS_TOKEN: ${{ secrets.TOKEN }}
