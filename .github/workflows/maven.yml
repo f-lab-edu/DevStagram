@@ -21,15 +21,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
     
-    # Caching dependencies
-    - name: Cache Maven packages
-      uses: actions/cache@v3
-      with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
           
     - name: Build devsta-gateway
       run: mvn deploy -s devsta-gateway/maven-setting.xml -B package --file devsta-gateway/pom.xml
