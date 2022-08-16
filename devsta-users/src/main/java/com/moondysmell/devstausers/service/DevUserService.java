@@ -22,7 +22,6 @@ import java.util.NoSuchElementException;
 public class DevUserService {
     private final DevUserRepository devUserRepository;
     private final MongoTemplate mongoTemplate;
-
     final static private String COLLECTION_NAME = "DevUser";
 
     public DevUser findUserByEmail(String email) {
@@ -82,6 +81,5 @@ public class DevUserService {
         }
         return devUserRepository.save(updateUser);
     }
-
 
 }
