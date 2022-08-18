@@ -9,8 +9,10 @@ import com.moondy.devstameetup.domain.document.MeetUpCategory;
 import com.moondy.devstameetup.domain.dto.*;
 import com.moondy.devstameetup.service.MeetUpService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -29,6 +31,8 @@ public class MeetUpSvcController {
     private static final String CATEGORY_ALL = "ALL";
     private final MeetUpSummaryAssembler meetUpSummaryAssembler;
 
+    @Value("${url.gateway}")
+    private String GATEWAY_URL = "";
 
     public MeetUpSvcController(MeetUpService meetUpService, MeetUpSummaryAssembler meetUpSummaryAssembler) {
         this.meetUpService = meetUpService;
@@ -50,14 +54,14 @@ public class MeetUpSvcController {
         //page는 0번부터 시작
         List<MeetUp> meetUpList = meetUpService.getRecentMyMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpSvcController.class).getMyMeetUp(userId, page + 1, size)).withRel("next"));
+                Link.of(String.format("%s/service/getMyMeetUp?page=%d&size=%d", GATEWAY_URL, page + 1, size), "next"));
     }
 
     @GetMapping("/getJoinedMeetUp")
     public CollectionModel<EntityModel<MeetUpSummaryDto>> getJoinedMeetUp(@RequestHeader("userId") String userId,@RequestParam int page, @RequestParam int size) {
         List<MeetUp> meetUpList = meetUpService.getJoinedMeetUpSummary(userId, page, size);
         return meetUpSummaryAssembler.toCollection(meetUpList,
-                linkTo(methodOn(MeetUpSvcController.class).getJoinedMeetUp(userId, page +1, size)).withRel("next"));
+                Link.of(String.format("%s/service/getJoinedMeetUp?page=%d&size=%d", GATEWAY_URL, page + 1, size), "next"));
     }
 
     @GetMapping("/getMeetUpStatus")
@@ -99,6 +103,11 @@ public class MeetUpSvcController {
         return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
     }
 
+    @PostMapping("/selfLeave")
+    public CommonResponse removeSelf(@RequestHeader("userId") String userId, @RequestBody JoinMeetUpDto dto) {
+        MeetUp meetUp = meetUpService.removeSelf(userId, dto);
+        return new CommonResponse(CommonCode.SUCCESS, Map.of(RESULT, meetUp.toDto()));
+    }
 
 
 }

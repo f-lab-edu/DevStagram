@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class UserController {
 
     @PutMapping("/update")
     public CommonResponse updateProfile(@RequestHeader("userId") String userId,
-                                        @RequestBody UserDetailDto userDetailDto) {
+                                        @RequestBody @Valid UserDetailDto userDetailDto) {
         devUserService.updateProfile(userId, userDetailDto);
         return new CommonResponse(CommonCode.SUCCESS);
     }

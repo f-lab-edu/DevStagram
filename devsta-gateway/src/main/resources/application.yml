@@ -36,7 +36,7 @@ spring:
           predicates:
             - Path=/api/posts/**
           filters:
-            - RewritePath=/api/(?<path>.*),/$\{path}
+            - RewritePath=/api/posts/(?<path>.*),/$\{path}
             - UserJwtFilter
         - id: meetup-service
           uri: ${uri.meetup-service}
