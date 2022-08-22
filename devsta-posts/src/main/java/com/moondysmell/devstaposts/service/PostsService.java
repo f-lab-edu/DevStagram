@@ -108,8 +108,7 @@ public class PostsService {
        FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true); //결과값 보기 옵션
         posts = mongoTemplate.findAndModify(query, update, options, Posts.class);
         if (posts == null) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
-
-        return mongoTemplate.findAndModify(query, update, options, Posts.class);
+        else return posts;
 
     }
 

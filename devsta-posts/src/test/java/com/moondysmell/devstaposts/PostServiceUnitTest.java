@@ -7,12 +7,16 @@ import com.moondysmell.devstaposts.repository.PostsRepository;
 import com.moondysmell.devstaposts.service.PostsService;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
@@ -23,7 +27,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@ExtendWith({MockitoExtension.class, SpringExtension.class}) //가짜 객체 명시
+//@ExtendWith({MockitoExtension.class, SpringExtension.class}) //가짜 객체 명시
+@ExtendWith({MockitoExtension.class}) //가짜 객체 명시
 public class PostServiceUnitTest {
 
     @InjectMocks
@@ -37,6 +42,7 @@ public class PostServiceUnitTest {
     public void deleteTest01(){
 
 
+        //given
         String userId = "wrongUser";
         Posts posts = Posts.builder()
                 .id(45L)
@@ -44,17 +50,14 @@ public class PostServiceUnitTest {
                 .userId("hi")
                 .build();
 
-        System.out.println(posts.getId());
-
-
-
         when(postsRepository.findById(any())).thenReturn(Optional.of(posts));
 
         Throwable throwable = assertThrows(CustomException.class, ()->{
             postsService.delete(any(), userId);
         });
 
-        assertEquals(CommonCode.NOT_MATCH_WRITER, throwable.getMessage());
+       // assertEquals(CommonCode.NOT_MATCH_WRITER, throwable.getMessage());
+        Assertions.assertEquals(CommonCode.NOT_MATCH_WRITER.getMessage(), throwable.getMessage());
         verify(postsRepository, never()).deleteById(any());
     }
 
@@ -70,6 +73,7 @@ public class PostServiceUnitTest {
                 .contents("happy")
                 .userId("writer")
                 .build();
+
 
         given(postsRepository.findById(postId)).willReturn(Optional.of(posts));
         doNothing().when(postsRepository).deleteById(any());
