@@ -32,20 +32,20 @@ public class RestClient{
         }
     }
 
-//    public String restTemplateGet(String serviceName, String endpoint, HashMap<String, ?> requestBody) {
-//        try {
-//            String serviceUrl = String.format("%s%s", serviceName, endpoint);
-//            HttpHeaders httpHeaders = new HttpHeaders();
-//            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-//            HttpEntity httpEntity = new HttpEntity(requestBody, httpHeaders);
-//            log.info("restTemplate -> $serviceUrl");
-//            ResponseEntity<String> restExchange = restTemplate.exchange(serviceUrl, HttpMethod.GET, httpEntity, String.class, "");
-//            log.info("restExchange -> $restExchange");
-//            log.info("body -> ${restExchange.body}");
-//            return restExchange.getBody();
-//        } catch (Exception e) {
-//            log.info(">>> " + e);
-//            return null;
-//        }
-//    }
+    public String restTemplateGet(String serviceName, String endpoint, HashMap<String, ?> requestBody) {
+        try {
+            String serviceUrl = String.format("%s%s", serviceName, endpoint);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity httpEntity = new HttpEntity(requestBody, httpHeaders);
+            log.info("restTemplate -> " + serviceUrl);
+            ResponseEntity<String> restExchange = restTemplate.exchange(serviceUrl, HttpMethod.GET, httpEntity, String.class, "");
+            log.info("restExchange -> " + restExchange);
+            log.info("body -> " + restExchange.getBody());
+            return restExchange.getBody();
+        } catch (Exception e) {
+            log.info(">>> " + e);
+            return null;
+        }
+    }
 }
