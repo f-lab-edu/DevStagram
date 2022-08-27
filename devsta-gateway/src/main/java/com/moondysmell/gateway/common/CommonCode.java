@@ -12,6 +12,7 @@ import java.util.Arrays;
 public enum CommonCode {
     // SUCCESS
     SUCCESS(200, 200, "성공"),
+    OAUTH_CHECK_SUCCESS(200, 201, "Oauth 로그인 확인"),
     // FAIL
     FAIL(500, -1, "실패. 알 수 없는 오류"),
 

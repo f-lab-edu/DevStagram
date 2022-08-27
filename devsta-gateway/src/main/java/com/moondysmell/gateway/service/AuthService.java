@@ -31,10 +31,15 @@ public class AuthService {
             switch (code) {
                 case 200:
                     switch (uri) {
-                        case SIGN_IN: return parseSignInSuccess(responseEntity);
+                        case SIGN_IN:
+                        case OAUTH:
+                            return parseSignInSuccess(responseEntity);
                         case SIGN_UP: return parseSignUpSuccess(responseEntity);
                         default: return parseChangePwSuccess(responseEntity);
                     }
+                case 201:
+                    log.info("oauthCheckSuccess >>> " + responseEntity);
+                    return new CommonResponse(CommonCode.OAUTH_CHECK_SUCCESS, (LinkedTreeMap) responseEntity.get("attribute"));
                 default:
                     return new CommonResponse(CommonCode.of((code)));
             }
@@ -50,6 +55,7 @@ public class AuthService {
         String id = (String) attribute.get("id");
         String email = (String) attribute.get("email");
         String token = jwtUtils.generate(new TokenUser(id, email));
+        log.info("parseSignInSuccess >>> ", token);
         return new CommonResponse(CommonCode.SUCCESS, Map.of("Authorization", token));
     }
 
