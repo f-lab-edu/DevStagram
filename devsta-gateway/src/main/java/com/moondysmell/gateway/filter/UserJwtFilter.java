@@ -37,11 +37,6 @@ public class UserJwtFilter extends AbstractGatewayFilterFactory<UserJwtFilter.Co
         this.mapper = mapper;
     }
 
-//    @Override
-//    public List<String> shortcutFieldOrder() {
-//        return Collections.singletonList(ROLE_KEY);
-//    }
-
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
@@ -70,10 +65,6 @@ public class UserJwtFilter extends AbstractGatewayFilterFactory<UserJwtFilter.Co
     private String extractToken(ServerHttpRequest request) {
         return request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0);
     }
-
-//    private boolean hasRole(TokenUser tokenUser, String role) {
-//        return role.equals(tokenUser.getRole());
-//    }
 
     private void addAuthorizationHeaders(ServerHttpRequest request, TokenUser tokenUser) {
         request.mutate()
