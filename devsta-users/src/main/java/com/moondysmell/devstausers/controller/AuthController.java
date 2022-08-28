@@ -78,18 +78,11 @@ public class AuthController {
             DevUser savedUser = devUserService.saveUser(userDetailDto);
             if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
             return new CommonResponse(CommonCode.FAIL);
-
         }catch (Exception e) {
             log.error(">>> " + e.getMessage());
             throw new CustomException(CommonCode.FAIL);
         }
-
-
     }
-
-
-
-
 
 }
 
