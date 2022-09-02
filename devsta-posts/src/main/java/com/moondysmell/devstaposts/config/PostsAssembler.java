@@ -17,6 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class PostsAssembler implements RepresentationModelAssembler<Posts, EntityModel<Posts>> {
+
     @Value("${url.gateway}")
     private String GATEWAY_URL = "";
 

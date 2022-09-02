@@ -9,6 +9,7 @@ import com.moondysmell.devstaposts.exception.CustomException;
 import com.moondysmell.devstaposts.repository.CommentRepository;
 import com.moondysmell.devstaposts.repository.PostsRepository;
 import lombok.AllArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -88,7 +89,7 @@ public class CommentService {
         else {
             //유저가 작성자 또는
             //(admin일때 삭제할수 있도록) - 추후개발
-            postsRepository.deleteById(String.valueOf(commentId));
+            postsRepository.deleteById(commentId);
             return true;
         }
 

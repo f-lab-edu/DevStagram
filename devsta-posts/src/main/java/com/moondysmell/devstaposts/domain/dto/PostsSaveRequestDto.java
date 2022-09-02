@@ -12,6 +12,7 @@ import java.util.Date;
 @Builder
 public class PostsSaveRequestDto {
 
+    
     @NotBlank(message = "내용을 작성해주세요.")
     private String contents;
     private String pictureUrl;

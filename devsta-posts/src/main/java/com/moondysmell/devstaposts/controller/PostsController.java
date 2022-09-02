@@ -93,7 +93,7 @@ public class PostsController {
     }
 
     @GetMapping("/getOneFeed")
-    public CommonResponse getOneFeed(@RequestParam String id){
+    public CommonResponse getOneFeed(@RequestParam Long id){
 
         try{
             Posts posts = postsService.getOneFeed(id);
@@ -122,7 +122,7 @@ public class PostsController {
 
     //피드 수정
     @PutMapping("/update/{postId}")
-    public CommonResponse updatePost(@PathVariable String postId,  @RequestHeader("userId") String userId, @RequestBody PostsSaveRequestDto saveRequestDto){
+    public CommonResponse updatePost(@PathVariable Long postId,  @RequestHeader("userId") String userId, @RequestBody PostsSaveRequestDto saveRequestDto){
             Posts posts = postsService.update(postId, userId, saveRequestDto);
             return new CommonResponse(CommonCode.SUCCESS, Map.of("update", posts));
 
@@ -130,9 +130,12 @@ public class PostsController {
 
     //피드 삭제
     @GetMapping("/delete/{postId}")
-    public CommonResponse deletePost(@PathVariable String postId,  @RequestHeader("userId") String userId){
+    public CommonResponse deletePost(@PathVariable Long postId, @RequestHeader("userId") String userId){
         postsService.delete(postId, userId);
-        return new CommonResponse(CommonCode.SUCCESS);
+        HashMap attribute = new HashMap();
+        attribute.put("deleted postId", postId);
+        return new CommonResponse(CommonCode.SUCCESS, attribute);
+
     }
 
     //좋아요 클릭

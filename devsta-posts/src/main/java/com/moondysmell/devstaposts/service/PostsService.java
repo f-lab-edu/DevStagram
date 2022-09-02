@@ -46,7 +46,7 @@ public class PostsService {
                 .contents(postsSaveRequestDto.getContents())
                 .pictureUrl(postsSaveRequestDto.getPictureUrl())
                 .createDt(LocalDateTime.now())
-                .updateDt(LocalDateTime.now())
+               // .updateDt(LocalDateTime.now())
                 .build();
 
         //return mongoTemplate.insert(posts);
@@ -85,13 +85,15 @@ public class PostsService {
     }
 
     //피드 하나만 조회
-    public Posts getOneFeed(String id) {
+    public Posts getOneFeed(Long id) {
         return postsRepository.findById(id).orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
     }
 
+
     //게시글 update
-    public Posts update(String postId, String userId, PostsSaveRequestDto newPosts) {
+    public Posts update(Long postId, String userId, PostsSaveRequestDto newPosts) {
         Optional<Posts> postById = postsRepository.findById(postId); //.orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
+        //Posts posts = Optional.of(postsRepository.findById(postId).get()).orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
         if (postById.isEmpty()) throw new CustomException(CommonCode.NOT_FOUNT_CONTENTS);
 
         Posts posts = postById.get();
@@ -106,15 +108,16 @@ public class PostsService {
        FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true); //결과값 보기 옵션
         posts = mongoTemplate.findAndModify(query, update, options, Posts.class);
         if (posts == null) throw new CustomException(CommonCode.POST_UPDATE_FAIL);
-
-        return mongoTemplate.findAndModify(query, update, options, Posts.class);
+        else return posts;
 
     }
 
 
     //피드 삭제
-    public void delete(String postId, String userId) {
+    public void delete(Long postId, String userId) {
         Optional<Posts> postById = postsRepository.findById(postId); //.orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
+       // Optional<Posts> temp = postsRepository.findById(postId);
+        //Posts posts = Optional.of(postsRepository.findById(postId).get()).orElseThrow(() -> new CustomException(CommonCode.NOT_FOUNT_CONTENTS));
         if (postById.isEmpty()) throw new CustomException(CommonCode.NOT_FOUNT_CONTENTS);
 
         Posts posts = postById.get();
@@ -151,8 +154,9 @@ public class PostsService {
         Query query = new Query(Criteria.where("id").is(postId));
         FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true); //결과값 보기 옵션
 
-        Posts post = mongoTemplate.findAndModify(query, update, options, Posts.class);
+        Posts posts = mongoTemplate.findAndModify(query, update, options, Posts.class);
+        if (posts == null) throw new CustomException(CommonCode.NOT_FOUNT_CONTENTS);
 
-        return post.getHeartsCount().size(); //좋아요 갯수 반환
+        return posts.getHeartsCount().size(); //좋아요 갯수 반환
     }
 }

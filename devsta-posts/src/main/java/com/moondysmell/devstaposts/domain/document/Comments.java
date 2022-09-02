@@ -1,5 +1,6 @@
 package com.moondysmell.devstaposts.domain.document;
 
+import com.moondysmell.devstaposts.domain.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comments {
+public class Comments  {
 
     @Transient
     public static final  String SEQUENCE_NAME = "comments_sequence";
@@ -45,5 +46,9 @@ public class Comments {
     @LastModifiedDate
     private LocalDateTime updateDt;
 
-
+//    public CommentDto toDto(){
+//        return CommentDto.builder()
+//                .postId(this.id.toString())
+//                .contents(this.contents).build();
+//    }
 }
