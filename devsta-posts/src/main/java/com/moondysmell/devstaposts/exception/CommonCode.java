@@ -11,6 +11,7 @@ public enum CommonCode {
     SUCCESS(200, 200, "성공"),
     // FAIL
     FAIL(500, -1, "실패. 알 수 없는 오류"),
+    INVALID_ELEMENTS(400, -2, "조건에 맞지 않는 요소(elements)가 있습니다"),
 
     //-1000: USER
 
