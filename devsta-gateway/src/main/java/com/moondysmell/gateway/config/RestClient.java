@@ -1,7 +1,6 @@
 package com.moondysmell.gateway.config;
 
-import com.moondysmell.gateway.common.CommonCode;
-import com.moondysmell.gateway.common.CustomException;
+import com.moondysmell.gateway.common.UndefiedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -27,8 +26,9 @@ public class RestClient{
             log.info("body -> " + restExchange.getBody());
             return restExchange.getBody();
         } catch (Exception e) {
+            //status 200이 아닌 에러메세지들은 여기로
             log.info(">>> " + e);
-            throw new CustomException(CommonCode.FAIL);
+            throw new UndefiedException(e.getMessage());
         }
     }
 
@@ -44,8 +44,9 @@ public class RestClient{
             log.info("body -> " + restExchange.getBody());
             return restExchange.getBody();
         } catch (Exception e) {
+            //status 200이 아닌 에러메세지들은 여기로
             log.info(">>> " + e);
-            return null;
+            throw new UndefiedException(e.getMessage());
         }
     }
 }

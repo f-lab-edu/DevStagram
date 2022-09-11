@@ -19,7 +19,8 @@ public enum CommonCode {
     USER_ALREADY_EXIST(200, -1002, "해당 아이디가 이미 존재합니다."),
     NICKNAME_ALREADY_EXIST(200, -1003 , "중복된 닉네임입니다." ),
     INVALID_SOCIAL_LOGIN_TYPE(200, -1004, "알 수 없는 소셜 로그인 형식입니다."),
-    OAUTH_LOGIN_FAILED(200, -1005, "Oauth에서 프로필 정보를 가져오는데 실패했습니다.");
+    OAUTH_LOGIN_FAILED(200, -1005, "Oauth에서 프로필 정보를 가져오는데 실패했습니다."),
+    INVALID_ELEMENTS(200, -1006, "조건에 맞지 않는 요소(elements)가 있습니다");
 
     //-2000: MeetUp
 

@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class ErrorControllerAdvice {
 
+    //CommonCode에 명시된 에러
     @ExceptionHandler(value = CustomException.class)
     protected ResponseEntity<CommonResponse<String>> handleCustomException(CustomException e) {
 //        ErrorResponse response = ErrorResponse.of(e.getErrorCode());
@@ -25,7 +26,15 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(value = NoSuchElementException.class)
     protected ResponseEntity<CommonResponse<String>> handleNoSuchElementException(Exception e) {
-        CommonResponse<String> response= new CommonResponse(CommonCode.FAIL);
+        CommonResponse<String> response= new CommonResponse(CommonCode.FAIL, e.getMessage(), null);
+        log.error(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    // CommonCode에 명시되지 않은 Exception 발생시 처리
+    @ExceptionHandler(value = UndefiedException.class)
+    protected ResponseEntity<CommonResponse<String>> handleUnDefinedExceptionHandler(Exception e) {
+        CommonResponse<String> response= new CommonResponse(CommonCode.FAIL, e.getMessage(), null);
         log.error(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

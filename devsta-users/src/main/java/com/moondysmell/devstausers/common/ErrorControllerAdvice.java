@@ -3,9 +3,11 @@ package com.moondysmell.devstausers.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -24,9 +26,17 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(value = NoSuchElementException.class)
-    protected ResponseEntity<CommonResponse<String>> handleNoSuchElementException(Exception e) {
-        CommonResponse<String> response= new CommonResponse(CommonCode.FAIL);
+    protected ResponseEntity<String> handleNoSuchElementException(Exception e) {
         log.error(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        // 400으로 리턴하면 gateway의
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    protected ResponseEntity<CommonResponse<String>> handleMethodArgumentNotValidException(Exception e) {
+        log.error(e.getMessage());
+        CommonResponse<String> response= new CommonResponse(CommonCode.INVALID_ELEMENTS, Map.of("errorTrace", e.getMessage()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

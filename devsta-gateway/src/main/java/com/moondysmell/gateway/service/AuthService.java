@@ -41,7 +41,9 @@ public class AuthService {
                     log.info("oauthCheckSuccess >>> " + responseEntity);
                     return new CommonResponse(CommonCode.OAUTH_CHECK_SUCCESS, (LinkedTreeMap) responseEntity.get("attribute"));
                 default:
-                    return new CommonResponse(CommonCode.of((code)));
+                    //에러
+                    Map map = (Map) responseEntity.get("attribute");
+                    return new CommonResponse(CommonCode.of((code)),responseEntity.get("message").toString(), map);
             }
 
         } catch (Exception e) {
