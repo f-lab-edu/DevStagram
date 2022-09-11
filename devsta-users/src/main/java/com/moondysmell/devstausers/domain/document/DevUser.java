@@ -52,6 +52,7 @@ public class DevUser {
     }
 
     public DevUser ofDetail(UserDetailDto userDetailDto) {
+        this.name = userDetailDto.getName();
         this.nickname = userDetailDto.getNickname();
         this.password = userDetailDto.getPassword();
         this.pictureUrl = userDetailDto.getPictureUrl();
@@ -61,7 +62,7 @@ public class DevUser {
         this.github = userDetailDto.getGithub();
         this.blog = userDetailDto.getBlog();
         this.tags = userDetailDto.getTags();
-        this.provider = "app";
+        this.provider = userDetailDto.getProvider();
         return this;
     }
 

@@ -74,6 +74,9 @@ public class AuthController {
         if (userDetailDto.getPictureUrl() == null) {
             userDetailDto.setPictureUrl(DEFAULT_PICTURE_URL);
         }
+        if (userDetailDto.getProvider() == null) {
+            userDetailDto.setProvider("app");
+        }
         try {
             DevUser savedUser = devUserService.saveUser(userDetailDto);
             if (savedUser != null) return new CommonResponse(CommonCode.SUCCESS, Map.of("user", new UserSummaryDto(savedUser)));
