@@ -38,7 +38,13 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     protected ResponseEntity<CommonResponse<String>> handleMethodArgumentNotValidException(Exception e) {
         log.error(e.getMessage());
-        CommonResponse<String> response= new CommonResponse(CommonCode.INVALID_ELEMENTS, Map.of("errorTrace", e.getMessage()));
+        Pattern pattern = Pattern.compile("(?<=default message \\[)(.*?)(?=\\])");
+        Matcher matcher = pattern.matcher(e.getMessage());
+        String result = "";
+        while (matcher.find()) {
+            result += matcher.group() + ";";
+        }
+        CommonResponse<String> response= new CommonResponse(CommonCode.INVALID_ELEMENTS, result, Map.of("errorTrace", e.getMessage()));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
