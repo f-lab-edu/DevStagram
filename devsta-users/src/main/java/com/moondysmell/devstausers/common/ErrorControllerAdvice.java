@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 @Slf4j
@@ -28,7 +30,7 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(value = NoSuchElementException.class)
     protected ResponseEntity<String> handleNoSuchElementException(Exception e) {
         log.error(e.getMessage());
-        // 400으로 리턴하면 gateway의
+        // 400으로 리턴하면 gateway 에서 UndefiedException으로 처리, 200으로 리턴하면 CustomException으로 처리 (CommonResponse 형식 지켜야함)
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
