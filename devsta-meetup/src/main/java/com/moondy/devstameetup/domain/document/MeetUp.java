@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "MeetUp")
@@ -47,6 +49,12 @@ public class MeetUp {
     @Field("leader_id")
     private String leaderId;
 
+    @Field("created_dt")
+    private LocalDateTime createdDt;
+
+    @Field("updated_dt")
+    private LocalDateTime updatedDt;
+
     public MeetUpDto toDto() {
         return MeetUpDto.builder()
                 .id(this.id.toString())
@@ -59,6 +67,8 @@ public class MeetUp {
                 .isOpenYn(this.isOpenYn)
                 .isRecruiting(this.isRecruiting)
                 .leaderId(this.leaderId)
+                .createdDt(this.createdDt)
+                .updatedDt(this.updatedDt)
                 .build();
     }
 
@@ -73,8 +83,8 @@ public class MeetUp {
                 .isOpenYn(this.isOpenYn)
                 .isRecruiting(this.isRecruiting)
                 .leaderId(this.leaderId)
+                .createdDt(this.createdDt)
+                .updatedDt(this.updatedDt)
                 .build();
     }
-
-
 }

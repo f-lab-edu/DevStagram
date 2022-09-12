@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,6 +28,6 @@ public class MeetUpDto {
     private Boolean isOpenYn;
     private Boolean isRecruiting;
     private String leaderId;
-
-
+    private LocalDateTime createdDt;
+    private LocalDateTime updatedDt;
 }

@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -166,6 +167,7 @@ public class MeetUpService {
         update.set("maxPeople", dto.getMaxPeople());
         update.set("isOpenYn", dto.getIsOpenYn());
         update.set("isRecruiting", dto.getIsRecruiting());
+        update.set("updatedDt", LocalDateTime.now());
         return updateMember(query, update);
     }
 
@@ -189,10 +191,12 @@ public class MeetUpService {
             memberList.add(userId);
             query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
             update.set("memberId", memberList);
+            update.set("updatedDt", LocalDateTime.now());
         } else {
             pendingList.add(userId);
             query.addCriteria(Criteria.where("id").is(dto.getMeetUpId()));
             update.set("pendingId", pendingList);
+            update.set("updatedDt", LocalDateTime.now());
         }
         return updateMember(query, update);
     }
@@ -215,6 +219,7 @@ public class MeetUpService {
         pendingList.remove(dto.getMemberId());
         update.set("memberId", memberList);
         update.set("pendingId", pendingList);
+        update.set("updatedDt", LocalDateTime.now());
         return updateMember(query, update);
     }
 
@@ -235,6 +240,7 @@ public class MeetUpService {
 
         update.set("memberId", memberList);
         update.set("pendingId", pendingList);
+        update.set("updatedDt", LocalDateTime.now());
         return updateMember(query, update);
     }
 
@@ -255,6 +261,7 @@ public class MeetUpService {
 
         update.set("memberId", memberList);
         update.set("pendingId", pendingList);
+        update.set("updatedDt", LocalDateTime.now());
         return updateMember(query, update);
     }
 
