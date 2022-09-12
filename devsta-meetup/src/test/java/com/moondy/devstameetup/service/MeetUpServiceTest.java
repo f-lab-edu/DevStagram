@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +23,7 @@ class MeetUpServiceTest {
         MongoTemplate mongoTemplate = Mockito.mock(MongoTemplate.class);
         MeetUpService meetUpService = new MeetUpService(meetUpCategoryRepository, meetUpRepository, mongoTemplate);
         ObjectId tempId = new ObjectId();
-        MeetUp newMeetUp = new MeetUp(tempId, "STUDY", "스터디 구합니다", "서울 스더티 구합니다", 5, null, null, true, true, null);
+        MeetUp newMeetUp = new MeetUp(tempId, "STUDY", "스터디 구합니다", "서울 스더티 구합니다", 5, null, null, true, true, null, LocalDateTime.now(), LocalDateTime.now());
         Mockito.when(meetUpRepository.save(Mockito.any(MeetUp.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(meetUpRepository.findById(tempId.toString()))
