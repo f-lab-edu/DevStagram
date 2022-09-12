@@ -21,4 +21,9 @@ public class CommonResponse<T> {
         this.message = commonCode.getMessage();
     }
 
+    public CommonResponse(CommonCode commonCode, String message, Map<String, T> attribute) {
+        this.code = commonCode.getCode();
+        this.message = message;
+        this.attribute = attribute;
+    }
 }
