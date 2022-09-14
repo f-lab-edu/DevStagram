@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -22,4 +24,6 @@ public class MeetUpSummaryDto extends RepresentationModel<MeetUpSummaryDto> {
     private Boolean isOpenYn;
     private Boolean isRecruiting;
     private String leaderId;
+    private LocalDateTime createdDt;
+    private LocalDateTime updatedDt;
 }

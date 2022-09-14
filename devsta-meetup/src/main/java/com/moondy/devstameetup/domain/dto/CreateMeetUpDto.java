@@ -6,6 +6,7 @@ import lombok.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -39,6 +40,8 @@ public class CreateMeetUpDto {
                 .isOpenYn(this.getIsOpenYn())
                 .isRecruiting(true)
                 .leaderId(userId)
+                .createdDt(LocalDateTime.now())
+                .updatedDt(LocalDateTime.now())
                 .build();
     }
 }

@@ -1,9 +1,7 @@
 package com.moondysmell.devstausers.domain.dto;
 
 import com.moondysmell.devstausers.domain.document.DevUser;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -17,6 +15,8 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserDetailDto implements Serializable {
     @NotBlank
     private String name;
@@ -41,6 +41,4 @@ public class UserDetailDto implements Serializable {
     //Oauth를 위해 구성한 추가 필드
     @Field("provider")
     private String provider;
-
-
 }
