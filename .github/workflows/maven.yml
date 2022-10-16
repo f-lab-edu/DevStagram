@@ -39,8 +39,8 @@ jobs:
       run: |
         cd ./devsta-meetup/src/main/resources
         touch ./application-meetup.properties
-        echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/meetup" > ./application-meetup.properties
-        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" > ./application-meetup.properties
+        echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/meetup" >> ./application-meetup.properties
+        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-meetup.properties
       shell: bash
 
     - name: Build devsta-gateway
