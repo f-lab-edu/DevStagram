@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "refact/ci" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    ## JDK Settings
     - uses: actions/checkout@v3
     - name: Set up JDK 11
       uses: actions/setup-java@v3
@@ -23,24 +24,34 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
+    ## create properties
+    - name: make application-gateway.properties
+      run: |
+        cd ./devsta-gateway/src/main/resources
+        touch ./application-gateway.properties
+        echo "uri.user-service = ${{ secrets.BACKEND_IP }}:9090" > ./application-gateway.properties
+        echo "uri.post-service = ${{ secrets.BACKEND_IP }}:9091" > ./application-gateway.properties
+        echo "uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092" > ./application-gateway.properties
+        echo "jwt.secret = ${{ secrets.JWT_SECRET }}" > ./application-gateway.properties
+      shell: bash
           
+    - name: make application-db.properties
+      run: |
+        cd ./devsta-meetup/src/main/resources
+        touch ./application-meetup.properties
+        echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/meetup" > ./application-meetup.properties
+        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" > ./application-meetup.properties
+      shell: bash
+
     - name: Build devsta-gateway
-      run: mvn deploy -s devsta-gateway/maven-setting.xml -B package --file devsta-gateway/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn deploy -B package --file devsta-gateway/pom.xml
+
     - name: Build devsta-meetup
-      run: mvn deploy -s devsta-meetup/maven-setting.xml -B package --file devsta-meetup/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn deploy -B package --file devsta-meetup/pom.xml
+
     - name: Build devsta-posts
-      run: mvn deploy -s devsta-posts/maven-setting.xml -B package --file devsta-posts/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn deploy -B package --file devsta-posts/pom.xml
+
     - name: Build devsta-users
-      run: mvn deploy -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn deploy -B package --file devsta-users/pom.xml
+
