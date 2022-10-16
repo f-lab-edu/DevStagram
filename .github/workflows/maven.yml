@@ -44,14 +44,25 @@ jobs:
       shell: bash
 
     - name: Build devsta-gateway
-      run: mvn deploy -B package --file devsta-gateway/pom.xml
-
+      run: mvn -B package --file devsta-gateway/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-meetup
-      run: mvn deploy -B package --file devsta-meetup/pom.xml
-
+      run: mvn -B package --file devsta-meetup/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-posts
-      run: mvn deploy -B package --file devsta-posts/pom.xml
-
+      run: mvn -B package --file devsta-posts/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-users
-      run: mvn deploy -B package --file devsta-users/pom.xml
-
+      run: mvn -B package --file devsta-users/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
