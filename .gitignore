@@ -1,0 +1,3 @@
+devsta-users/src/main/resources/application-mongodb.properties
+devsta-gateway/src/main/resources/application-gateway.properties
+devsta-meetup/src/main/resources/application-meetup.properties
