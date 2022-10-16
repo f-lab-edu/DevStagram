@@ -1,3 +1,7 @@
+uri:
+  user-service: http://localhost:9090
+  post-service: http://localhost:9091
+  meetup-service: http://localhost:9092
 server:
   port: 9999
 spring:
@@ -50,6 +54,7 @@ spring:
             - RewritePath=/api/meetup/(?<path>.*),/$\{path}
 
 jwt:
+  secret: random
   expiration-second: 172800  #48시간
 #  expiration-second: 259200  #72시간
 #  expiration-second: 10  #10초
