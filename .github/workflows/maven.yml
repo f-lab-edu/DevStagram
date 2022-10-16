@@ -25,15 +25,15 @@ jobs:
         cache: maven
     
     ## create properties
-    - name: make application-gateway.properties
-      run: |
-        cd ./devsta-gateway/src/main/resources
-        touch ./application-gateway.properties
-        echo "uri.user-service = ${{ secrets.BACKEND_IP }}:9090" > ./application-gateway.properties
-        echo "uri.post-service = ${{ secrets.BACKEND_IP }}:9091" > ./application-gateway.properties
-        echo "uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092" > ./application-gateway.properties
-        echo "jwt.secret = ${{ secrets.JWT_SECRET }}" > ./application-gateway.properties
-      shell: bash
+#     - name: make application-gateway.properties
+#       run: |
+#         cd ./devsta-gateway/src/main/resources
+#         touch ./application-gateway.properties
+#         echo "uri.user-service = ${{ secrets.BACKEND_IP }}:9090" > ./application-gateway.properties
+#         echo "uri.post-service = ${{ secrets.BACKEND_IP }}:9091" > ./application-gateway.properties
+#         echo "uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092" > ./application-gateway.properties
+#         echo "jwt.secret = ${{ secrets.JWT_SECRET }}" > ./application-gateway.properties
+#       shell: bash
           
     - name: make application-db.properties
       run: |
