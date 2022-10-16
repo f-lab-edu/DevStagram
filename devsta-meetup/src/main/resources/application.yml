@@ -6,8 +6,6 @@ spring:
     name: meetupservice
   profiles:
     active: default
-    include: db
+    include: meetup
   config:
     import: "optional:configserver:"
-url:
-  gateway: "http://localhost:9999/api/meetup"
