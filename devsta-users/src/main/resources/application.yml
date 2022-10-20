@@ -2,25 +2,10 @@ server:
   port: 9090
 spring:
   profiles:
-    include: db
+    include: users
   application:
     name: userservice
-#  data:
-#    mongodb:
-#      uri: mongodb://localhost:17017/devstagram #mongodb://localhost:17017/devstagram
-#      #authentication-database: admin
-
-
-
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
 
-
-
-
-
-      #  profiles:
-      #    active: default
-      #  config:
-      #    import: "optional:configserver:http://localhost:8888"
