@@ -3,19 +3,10 @@ server:
 
 spring:
   profiles:
-    include: db
+    include: posts
   application:
     name: postservice
-#  profiles:
-#    active: default
-#  config:
-#    import: "configserver:http://localhost:8888"
-#  data:
-#    mongodb:
-#      uri: mongodb://localhost:27017/devstagram
 
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
-url:
-  gateway: "http://localhost:9999/posts"
