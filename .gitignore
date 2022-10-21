@@ -1,3 +1,5 @@
 devsta-users/src/main/resources/application-mongodb.properties
+devsta-users/src/main/resources/application-users.properties
 devsta-gateway/src/main/resources/application-gateway.properties
 devsta-meetup/src/main/resources/application-meetup.properties
+devsta-posts/src/main/resources/application-posts.properties
