@@ -22,15 +22,16 @@ jobs:
         cache: maven
     
     ## create properties
-#     - name: make application-gateway.properties
-#       run: |
-#         cd ./devsta-gateway/src/main/resources
-#         touch ./application-gateway.properties
-#         echo "uri.user-service = ${{ secrets.BACKEND_IP }}:9090" >> ./application-gateway.properties
-#         echo "uri.post-service = ${{ secrets.BACKEND_IP }}:9091" >> ./application-gateway.properties
-#         echo "uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092" >> ./application-gateway.properties
-#         echo "jwt.secret = ${{ secrets.JWT_SECRET }}" >> ./application-gateway.properties
-#       shell: bash
+    - name: make application-gateway.properties
+      run: |
+        cd ./devsta-gateway/src/main/resources
+        touch ./application-gateway.properties
+        echo uri.user-service = ${{ secrets.BACKEND_IP }}:9090 >> ./application-gateway.properties
+        echo uri.post-service = ${{ secrets.BACKEND_IP }}:9091 >> ./application-gateway.properties
+        echo uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092 >> ./application-gateway.properties
+        echo jwt.secret = ${{ secrets.JWT_SECRET }} >> ./application-gateway.properties
+        cat ./application-gateway.properties
+      shell: bash
           
     - name: make application-meetup.properties
       run: |
@@ -38,6 +39,7 @@ jobs:
         touch ./application-meetup.properties
         echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/meetup" >> ./application-meetup.properties
         echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-meetup.properties
+        cat ./application-meetup.properties
       shell: bash
 
     - name: make application-posts.properties
@@ -46,6 +48,7 @@ jobs:
         touch ./application-posts.properties
         echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/posts" >> ./application-posts.properties
         echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-posts.properties
+        cat ./application-posts.properties
       shell: bash
 
     - name: make application-users.properties
@@ -53,19 +56,14 @@ jobs:
         cd ./devsta-users/src/main/resources
         touch ./application-users.properties
         echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-users.properties
+        cat ./application-users.properties
       shell: bash
 
     - name: Build devsta-gateway
-      run: |
-        touch ./devsta-gateway/src/main/resources/application-gateway.properties
-        echo "uri.user-service = ${{ secrets.BACKEND_IP }}:9090" >> ./devsta-gateway/src/main/resources/application-gateway.properties
-        echo "uri.post-service = ${{ secrets.BACKEND_IP }}:9091" >> ./devsta-gateway/src/main/resources/application-gateway.properties
-        echo "uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092" >> ./devsta-gateway/src/main/resources/application-gateway.properties
-        echo "jwt.secret = ${{ secrets.JWT_SECRET }}" >> ./devsta-gateway/src/main/resources/application-gateway.properties
-        mvn -B package --file devsta-gateway/pom.xml
-#       env:
-#         USER_NAME: ${{ secrets.USER_NAME }}
-#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn -B package --file devsta-gateway/pom.xml
+      env:
+        USER_NAME: ${{ secrets.USER_NAME }}
+        ACCESS_TOKEN: ${{ secrets.TOKEN }}
         
     - name: Build devsta-meetup
       run: mvn -B package --file devsta-meetup/pom.xml
