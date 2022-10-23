@@ -63,24 +63,24 @@ jobs:
       run: |
         cat devsta-gateway/src/main/resources/application-gateway.properties
         mvn -B package --file devsta-gateway/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
         
     - name: Build devsta-meetup
       run: mvn -B package --file devsta-meetup/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
         
     - name: Build devsta-posts
       run: mvn -B package --file devsta-posts/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
         
     - name: Build devsta-users
       run: mvn -B package --file devsta-users/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
