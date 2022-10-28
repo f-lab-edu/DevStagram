@@ -1,14 +1,14 @@
-package com.moondysmell.devstausers;
+// package com.moondysmell.devstausers;
 
-//import org.junit.Test;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// //import org.junit.Test;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class DevstausersApplicationTests {
+// @SpringBootTest
+// class DevstausersApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }
