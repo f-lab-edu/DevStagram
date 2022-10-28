@@ -1,6 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
@@ -15,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    ## JDK Settings
     - uses: actions/checkout@v3
     - name: Set up JDK 11
       uses: actions/setup-java@v3
@@ -23,24 +21,66 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
+    ## create properties
+    - name: make application-gateway.properties
+      run: |
+        cd ./devsta-gateway/src/main/resources
+        touch ./application-gateway.properties
+        echo uri.user-service = ${{ secrets.BACKEND_IP }}:9090 >> ./application-gateway.properties
+        echo uri.post-service = ${{ secrets.BACKEND_IP }}:9091 >> ./application-gateway.properties
+        echo uri.meetup-service = ${{ secrets.BACKEND_IP }}:9092 >> ./application-gateway.properties
+        echo jwt.secret = ${{ secrets.JWT_SECRET }} >> ./application-gateway.properties
+        cat ./application-gateway.properties
+      shell: bash
           
+    - name: make application-meetup.properties
+      run: |
+        cd ./devsta-meetup/src/main/resources
+        touch ./application-meetup.properties
+        echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/meetup" >> ./application-meetup.properties
+        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-meetup.properties
+        cat ./application-meetup.properties
+      shell: bash
+
+    - name: make application-posts.properties
+      run: |
+        cd ./devsta-posts/src/main/resources
+        touch ./application-posts.properties
+        echo "url.gateway = ${{ secrets.BACKEND_IP }}:9999/api/posts" >> ./application-posts.properties
+        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-posts.properties
+        cat ./application-posts.properties
+      shell: bash
+
+    - name: make application-users.properties
+      run: |
+        cd ./devsta-users/src/main/resources
+        touch ./application-users.properties
+        echo "spring.data.mongodb.uri = ${{ secrets.DB_URI }}" >> ./application-users.properties
+        cat ./application-users.properties
+      shell: bash
+
     - name: Build devsta-gateway
-      run: mvn deploy -s devsta-gateway/maven-setting.xml -B package --file devsta-gateway/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: |
+        cat devsta-gateway/src/main/resources/application-gateway.properties
+        mvn -B package --file devsta-gateway/pom.xml
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-meetup
-      run: mvn deploy -s devsta-meetup/maven-setting.xml -B package --file devsta-meetup/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn -B package --file devsta-meetup/pom.xml
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-posts
-      run: mvn deploy -s devsta-posts/maven-setting.xml -B package --file devsta-posts/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn -B package --file devsta-posts/pom.xml
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
+        
     - name: Build devsta-users
-      run: mvn deploy -s devsta-users/maven-settings.xml -B package --file devsta-users/pom.xml
-      env:
-        USER_NAME: ${{ secrets.USER_NAME }}
-        ACCESS_TOKEN: ${{ secrets.TOKEN }}
+      run: mvn -B package --file devsta-users/pom.xml
+#       env:
+#         USER_NAME: ${{ secrets.USER_NAME }}
+#         ACCESS_TOKEN: ${{ secrets.TOKEN }}
